@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             SuspendLayout();
+
             // 
             // Form1
             // 
@@ -45,5 +46,6 @@
         }
 
         #endregion
+
     }
 }

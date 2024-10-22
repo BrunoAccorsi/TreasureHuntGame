@@ -2,6 +2,7 @@ namespace TreasureHunt
 {
     public partial class Form1 : Form
     {
+        TableLayoutPanel tableLayoutPanel = new TableLayoutPanel();
         public Form1()
         {
             InitializeComponent();
@@ -20,23 +21,24 @@ namespace TreasureHunt
 
             // Add the panel to the form
             this.Controls.Add(gridPanel);
+
+            ChangeButtonColor(0, 0, Color.DarkGray); // example on how to change a button color
         }
 
         private void CreateButtonGrid(Panel gridPanel)
         {
+
             int gridSize = 6;
-            TableLayoutPanel tableLayoutPanel = new TableLayoutPanel
-            {
-                RowCount = gridSize,
-                ColumnCount = gridSize,
-                Dock = DockStyle.Fill,
-                BackColor = Color.Transparent
-            };
+
+            this.tableLayoutPanel.RowCount = gridSize;
+            this.tableLayoutPanel.ColumnCount = gridSize;
+            this.tableLayoutPanel.Dock = DockStyle.Fill;
+            this.tableLayoutPanel.BackColor = Color.Transparent;
 
             for (int i = 0; i < gridSize; i++)
             {
-                tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100f / gridSize));
-                tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f / gridSize));
+                this.tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100f / gridSize));
+                this.tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f / gridSize));
             }
 
             for (int row = 0; row < gridSize; row++)
@@ -49,15 +51,36 @@ namespace TreasureHunt
                         Dock = DockStyle.Fill,
                         Margin = new Padding(1),
                         BackColor = Color.Transparent,
-                        Name = $"btn_{row}_{col}"
+                        Name = $"btn_{row}_{col}",
                     };
-                    tableLayoutPanel.Controls.Add(btn, col, row);
+                    this.tableLayoutPanel.Controls.Add(btn, col, row);
                 }
             }
 
+
             // Add the TableLayoutPanel to the panel
-            gridPanel.Controls.Add(tableLayoutPanel);
+            gridPanel.Controls.Add(this.tableLayoutPanel);
         }
+
+        private void ChangeButtonColor(int row, int col, Color color)
+        {
+            // Construct the button name using the same pattern you used to name them
+            string buttonName = $"btn_{row}_{col}";
+
+            // Find the button in the TableLayoutPanel by its name
+            Control[] controls = this.tableLayoutPanel.Controls.Find(buttonName, true);
+
+            if (controls.Length > 0 && controls[0] is Button)
+            {
+                Button btn = (Button)controls[0];
+                btn.BackColor = color;
+            }
+            else
+            {
+                MessageBox.Show($"Button {buttonName} not found!");
+            }
+        }
+
     }
 
 }
