@@ -37,6 +37,7 @@
             // 
             // gridPanel
             // 
+            gridPanel.AllowDrop = true;
             gridPanel.BackColor = Color.Wheat;
             gridPanel.Location = new Point(278, 276);
             gridPanel.Name = "gridPanel";
