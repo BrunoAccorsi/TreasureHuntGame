@@ -46,6 +46,7 @@
             // 
             // sourcePanel
             // 
+            sourcePanel.AllowDrop = true;
             sourcePanel.BackColor = Color.Wheat;
             sourcePanel.Controls.Add(label1);
             sourcePanel.Location = new Point(12, 276);

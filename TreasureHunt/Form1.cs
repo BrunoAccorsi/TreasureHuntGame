@@ -34,16 +34,16 @@ namespace TreasureHunt
                         Location = new Point(col * ImageSize, row * ImageSize),
                         BorderStyle = BorderStyle.FixedSingle,
                         SizeMode = PictureBoxSizeMode.Zoom,
-                        Tag = new Point(row, col)
+                        Tag = new Point(row, col),
+                        AllowDrop = true
                     };
-
                     picBox.Image = GetDefaultImage(); //this is the empty cell image
 
-                    picBox.MouseDown += PictureBox_MouseDown;
-                    picBox.DragEnter += PictureBox_DragEnter;
-                    picBox.DragDrop += PictureBox_DragDrop;
-                    picBox.MouseEnter += (s, e) => PictureBox_MouseEnter(picBox, e);
-                    picBox.MouseLeave += (s, e) => PictureBox_MouseLeave(picBox, e);
+                    picBox.MouseDown += (s, e) => PictureBox_MouseDown(picBox, e);
+                    picBox.DragEnter += (s, e) => PictureBox_DragEnter(picBox, e);
+                    picBox.DragDrop += (s, e) => PictureBox_DragDrop(picBox, e);
+                    picBox.MouseEnter += (s, e) => PictureBox_MouseEnter(picBox, e); //hover effect
+                    picBox.MouseLeave += (s, e) => PictureBox_MouseLeave(picBox, e); //remove hover effect
 
                     gridPanel.Controls.Add(picBox);
                 }
@@ -53,8 +53,8 @@ namespace TreasureHunt
         private void InitializeSourcePanel()
         {
             sourcePanel.Controls.Clear();
+            sourcePanel.DragEnter += (s, e) => SourcePanel_MouseDown(sourcePanel, e);
 
-            // Select a few random treasures from the available list (e.g., 3 treasures for simplicity)
             Random random = new Random();
             var treasureTypes = Enum.GetValues(typeof(TreasureImage)).Cast<TreasureImage>().OrderBy(x => random.Next()).Take(2);
 
@@ -73,10 +73,8 @@ namespace TreasureHunt
                     AllowDrop = true
                 };
 
-                // Enable drag for each treasure image
                 sourcePicBox.MouseDown += (s, e) => SourcePictureBox_MouseDown(sourcePicBox, e);
 
-                // Add the PictureBox to the sourcePanel
                 sourcePanel.Controls.Add(sourcePicBox);
                 yOffset += 110;
             }
@@ -84,11 +82,12 @@ namespace TreasureHunt
 
         private void SourcePictureBox_MouseDown(PictureBox sourcePicBox, MouseEventArgs e)
         {
-            if (sourcePicBox.Image != null)
-            {
-                // Start dragging the image from the source panel
-                sourcePicBox.DoDragDrop(sourcePicBox.Image, DragDropEffects.Copy);
-            }
+            sourcePicBox.DoDragDrop(sourcePicBox, DragDropEffects.Move);
+        }
+
+        private void SourcePanel_MouseDown(Panel sourcePanel, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Move;
         }
 
         private Image GetDefaultImage()
@@ -96,20 +95,16 @@ namespace TreasureHunt
             return new Bitmap(ImageSize, ImageSize);
         }
 
-        private void PictureBox_MouseDown(object? sender, MouseEventArgs e)
+        private void PictureBox_MouseDown(PictureBox targetPicBox, MouseEventArgs e)
         {
-            PictureBox? picBox = sender as PictureBox;
-            if (picBox != null && picBox.Image != null)
-            {
-                picBox.DoDragDrop(picBox.Image, DragDropEffects.Move);
-            }
+            targetPicBox.DoDragDrop(targetPicBox, DragDropEffects.Move);
         }
 
-        private void PictureBox_DragEnter(object? sender, DragEventArgs e)
+        private void PictureBox_DragEnter(PictureBox targetPicBox, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(typeof(Image)))
+            if (e.Data.GetDataPresent(typeof(PictureBox)))
             {
-                e.Effect = DragDropEffects.Copy; // Allow copying the image onto the grid cell
+                e.Effect = DragDropEffects.Move;
             }
             else
             {
@@ -127,13 +122,31 @@ namespace TreasureHunt
             pictureBox.BackColor = Color.Wheat;
         }
 
-        private void PictureBox_DragDrop(object? sender, DragEventArgs e)
+        private void PictureBox_DragDrop(PictureBox targetPicBox, DragEventArgs e)
         {
-            PictureBox? targetPicBox = sender as PictureBox;
+            PictureBox sourcePicBox = e.Data.GetData(typeof(PictureBox)) as PictureBox;
+            sourcePicBox.Size = new Size(ImageSize, ImageSize);
 
-            if (targetPicBox != null && e.Data.GetDataPresent(typeof(Image)))
+            if (sourcePicBox != null && targetPicBox != sourcePicBox)
             {
-                targetPicBox.Image = (Image)e.Data.GetData(typeof(Image));
+                Control parent = targetPicBox.Parent;
+
+                if (sourcePicBox.Parent != null)
+                {
+                    sourcePicBox.Parent.Controls.Remove(sourcePicBox);
+                }
+
+                parent.Controls.Remove(targetPicBox);
+
+                sourcePicBox.Location = targetPicBox.Location;
+
+                parent.Controls.Add(sourcePicBox);
+
+                if (targetPicBox.Parent != null)
+                {
+                    targetPicBox.Location = sourcePicBox.Location;
+                    targetPicBox.Parent.Controls.Add(targetPicBox);
+                }
             }
         }
     }
