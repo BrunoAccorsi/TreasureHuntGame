@@ -63,6 +63,36 @@ namespace TreasureHunt.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] BombTrap {
+            get {
+                object obj = ResourceManager.GetObject("BombTrap", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] CursedPotion {
+            get {
+                object obj = ResourceManager.GetObject("CursedPotion", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] GoldChalice {
+            get {
+                object obj = ResourceManager.GetObject("GoldChalice", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] GoldPile {
             get {
                 object obj = ResourceManager.GetObject("GoldPile", resourceCulture);
@@ -87,6 +117,16 @@ namespace TreasureHunt.Properties {
             get {
                 object obj = ResourceManager.GetObject("Screen", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] SkullCurse {
+            get {
+                object obj = ResourceManager.GetObject("SkullCurse", resourceCulture);
+                return ((byte[])(obj));
             }
         }
     }

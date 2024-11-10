@@ -32,6 +32,7 @@
             gridPanel = new Panel();
             sourcePanel = new Panel();
             label1 = new Label();
+            panel1 = new Panel();
             sourcePanel.SuspendLayout();
             SuspendLayout();
             // 
@@ -47,11 +48,12 @@
             // sourcePanel
             // 
             sourcePanel.AllowDrop = true;
+            sourcePanel.AutoScroll = true;
             sourcePanel.BackColor = Color.Wheat;
             sourcePanel.Controls.Add(label1);
             sourcePanel.Location = new Point(12, 276);
             sourcePanel.Name = "sourcePanel";
-            sourcePanel.Size = new Size(200, 471);
+            sourcePanel.Size = new Size(200, 728);
             sourcePanel.TabIndex = 1;
             // 
             // label1
@@ -64,16 +66,27 @@
             label1.Text = "Choose the Treasures and traps to place";
             label1.TextAlign = ContentAlignment.TopCenter;
             // 
+            // panel1
+            // 
+            panel1.AutoScroll = true;
+            panel1.BackgroundImage = (Image)resources.GetObject("panel1.BackgroundImage");
+            panel1.BackgroundImageLayout = ImageLayout.None;
+            panel1.Dock = DockStyle.Fill;
+            panel1.Location = new Point(0, 0);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(1272, 1109);
+            panel1.TabIndex = 0;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.Black;
-            BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             BackgroundImageLayout = ImageLayout.Center;
             ClientSize = new Size(1272, 1109);
             Controls.Add(sourcePanel);
             Controls.Add(gridPanel);
+            Controls.Add(panel1);
             DoubleBuffered = true;
             Name = "Form1";
             Text = "Form1";
@@ -87,5 +100,6 @@
         private Panel gridPanel;
         private Panel sourcePanel;
         private Label label1;
+        private Panel panel1;
     }
 }

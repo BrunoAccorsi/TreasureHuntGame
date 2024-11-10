@@ -5,10 +5,7 @@
     {
         RedGem,
         GoldPile,
-        //BlueGem,
-        //Skull,
-        //TreasureChestClosed,
-        //TreasureChestOpen,
+        GoldChalice,
     }
 
     public static class TreasureImageLoader
@@ -19,6 +16,7 @@
         {
             treasureImages[TreasureImage.RedGem] = ByteArrayToImage(Properties.Resources.RedGem);
             treasureImages[TreasureImage.GoldPile] = ByteArrayToImage(Properties.Resources.GoldPile);
+            treasureImages[TreasureImage.GoldChalice] = ByteArrayToImage(Properties.Resources.GoldChalice);
         }
 
         private static Image ByteArrayToImage(byte[] byteArray)

@@ -7,7 +7,8 @@ namespace TreasureHunt
 
         TableLayoutPanel tableLayoutPanel = new TableLayoutPanel();
         private const int GridSize = 6; // 6x6 grid
-        private const int ImageSize = 130; // Size of each cell (adjust as needed)
+        private const int ImageSizeW = 132; // Size of each cell
+        private const int ImageSizeH = 122; // Size of each cell 
         public Form1()
         {
             InitializeComponent();
@@ -30,8 +31,8 @@ namespace TreasureHunt
                 {
                     PictureBox picBox = new PictureBox
                     {
-                        Size = new Size(ImageSize, ImageSize),
-                        Location = new Point(col * ImageSize, row * ImageSize),
+                        Size = new Size(ImageSizeW, ImageSizeH),
+                        Location = new Point(col * ImageSizeW, row * ImageSizeH),
                         BorderStyle = BorderStyle.FixedSingle,
                         SizeMode = PictureBoxSizeMode.Zoom,
                         Tag = new Point(row, col),
@@ -62,7 +63,8 @@ namespace TreasureHunt
             sourcePanel.DragEnter += (s, e) => SourcePanel_MouseDown(sourcePanel, e);
 
             Random random = new Random();
-            var treasureTypes = Enum.GetValues(typeof(TreasureImage)).Cast<TreasureImage>().OrderBy(x => random.Next()).Take(2);
+            var treasureTypes = Enum.GetValues(typeof(TreasureImage)).Cast<TreasureImage>().OrderBy(x => random.Next()).Take(3);
+            var trapTypes = Enum.GetValues(typeof(TrapImage)).Cast<TrapImage>().OrderBy(x => random.Next()).Take(2);
 
             int yOffset = 100;
             foreach (var treasureType in treasureTypes)
@@ -70,7 +72,7 @@ namespace TreasureHunt
                 // Create a PictureBox for each treasure
                 PictureBox sourcePicBox = new PictureBox
                 {
-                    Size = new Size(ImageSize, ImageSize),
+                    Size = new Size(ImageSizeW, ImageSizeH),
                     Location = new Point(30, yOffset),
                     Image = TreasureImageLoader.GetImage(treasureType),
                     SizeMode = PictureBoxSizeMode.Zoom,
@@ -82,7 +84,27 @@ namespace TreasureHunt
                 sourcePicBox.MouseDown += (s, e) => SourcePictureBox_MouseDown(sourcePicBox, e);
 
                 sourcePanel.Controls.Add(sourcePicBox);
-                yOffset += ImageSize + 20;
+                yOffset += ImageSizeW + 20;
+            }
+
+            foreach (var trapType in trapTypes)
+            {
+                // Create a PictureBox for each treasure
+                PictureBox sourcePicBox = new PictureBox
+                {
+                    Size = new Size(ImageSizeW, ImageSizeH),
+                    Location = new Point(30, yOffset),
+                    Image = TrapImageLoader.GetImage(trapType),
+                    SizeMode = PictureBoxSizeMode.Zoom,
+                    BorderStyle = BorderStyle.FixedSingle,
+                    Tag = trapType, // Store the treasure type in the Tag property for identification
+                    AllowDrop = true
+                };
+
+                sourcePicBox.MouseDown += (s, e) => SourcePictureBox_MouseDown(sourcePicBox, e);
+
+                sourcePanel.Controls.Add(sourcePicBox);
+                yOffset += ImageSizeW + 20;
             }
         }
 
@@ -98,7 +120,7 @@ namespace TreasureHunt
 
         private Image GetDefaultImage()
         {
-            return new Bitmap(ImageSize, ImageSize);
+            return new Bitmap(ImageSizeW, ImageSizeH);
         }
 
         private void PictureBox_MouseDown(PictureBox targetPicBox, MouseEventArgs e)
