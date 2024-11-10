@@ -52,20 +52,26 @@ namespace TreasureHunt
 
         private void InitializeSourcePanel()
         {
-            sourcePanel.Controls.Clear();
+            //remove only the assets
+            foreach (var control in sourcePanel.Controls.OfType<PictureBox>().ToArray())
+            {
+                sourcePanel.Controls.Remove(control);
+                control.Dispose();
+            }
+
             sourcePanel.DragEnter += (s, e) => SourcePanel_MouseDown(sourcePanel, e);
 
             Random random = new Random();
             var treasureTypes = Enum.GetValues(typeof(TreasureImage)).Cast<TreasureImage>().OrderBy(x => random.Next()).Take(2);
 
-            int yOffset = 0;
+            int yOffset = 100;
             foreach (var treasureType in treasureTypes)
             {
                 // Create a PictureBox for each treasure
                 PictureBox sourcePicBox = new PictureBox
                 {
-                    Size = new Size(100, 100),
-                    Location = new Point(10, yOffset),
+                    Size = new Size(ImageSize, ImageSize),
+                    Location = new Point(30, yOffset),
                     Image = TreasureImageLoader.GetImage(treasureType),
                     SizeMode = PictureBoxSizeMode.Zoom,
                     BorderStyle = BorderStyle.FixedSingle,
@@ -76,7 +82,7 @@ namespace TreasureHunt
                 sourcePicBox.MouseDown += (s, e) => SourcePictureBox_MouseDown(sourcePicBox, e);
 
                 sourcePanel.Controls.Add(sourcePicBox);
-                yOffset += 110;
+                yOffset += ImageSize + 20;
             }
         }
 

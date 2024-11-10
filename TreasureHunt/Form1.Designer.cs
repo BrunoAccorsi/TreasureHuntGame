@@ -56,9 +56,10 @@
             // 
             // label1
             // 
-            label1.Location = new Point(19, 13);
+            label1.Font = new Font("Tahoma", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label1.Location = new Point(10, 9);
             label1.Name = "label1";
-            label1.Size = new Size(161, 36);
+            label1.Size = new Size(178, 76);
             label1.TabIndex = 0;
             label1.Text = "Choose the Treasures and traps to place";
             label1.TextAlign = ContentAlignment.TopCenter;
