@@ -125,27 +125,29 @@ namespace TreasureHunt
         private void PictureBox_DragDrop(PictureBox targetPicBox, DragEventArgs e)
         {
             PictureBox sourcePicBox = e.Data.GetData(typeof(PictureBox)) as PictureBox;
-            sourcePicBox.Size = new Size(ImageSize, ImageSize);
-
             if (sourcePicBox != null && targetPicBox != sourcePicBox)
             {
-                Control parent = targetPicBox.Parent;
-
-                if (sourcePicBox.Parent != null)
+                if (sourcePicBox.Parent == sourcePanel)
                 {
-                    sourcePicBox.Parent.Controls.Remove(sourcePicBox);
+                    // Move image from source to target
+                    targetPicBox.Image = sourcePicBox.Image;
+                    targetPicBox.Tag = sourcePicBox.Tag;
+
+                    // Remove source PictureBox from sourcePanel
+                    sourcePanel.Controls.Remove(sourcePicBox);
+                    sourcePicBox.Dispose(); // Optionally dispose of the control
                 }
-
-                parent.Controls.Remove(targetPicBox);
-
-                sourcePicBox.Location = targetPicBox.Location;
-
-                parent.Controls.Add(sourcePicBox);
-
-                if (targetPicBox.Parent != null)
+                else
                 {
-                    targetPicBox.Location = sourcePicBox.Location;
-                    targetPicBox.Parent.Controls.Add(targetPicBox);
+                    // Swap images between grid cells
+                    Image tempImage = targetPicBox.Image;
+                    targetPicBox.Image = sourcePicBox.Image;
+                    sourcePicBox.Image = tempImage;
+
+                    // Swap Tags if necessary
+                    object tempTag = targetPicBox.Tag;
+                    targetPicBox.Tag = sourcePicBox.Tag;
+                    sourcePicBox.Tag = tempTag;
                 }
             }
         }
