@@ -3,84 +3,133 @@ namespace TreasureHunt
     public partial class Form1 : Form
     {
         TableLayoutPanel tableLayoutPanel = new TableLayoutPanel();
+        private const int GridSize = 6; // 6x6 grid
+        private const int ImageSize = 130; // Size of each cell (adjust as needed)
         public Form1()
         {
             InitializeComponent();
-
-            // Create a panel to hold the button grid
-            Panel gridPanel = new Panel
-            {
-                Width = 720,
-                Height = 720,
-                BackColor = Color.Transparent,
-                Location = new Point(300, 250),  // Point where the panel will be placed 
-                Anchor = AnchorStyles.None
-            };
-
-            CreateButtonGrid(gridPanel);
-
-            // Add the panel to the form
-            this.Controls.Add(gridPanel);
-
-            ChangeButtonColor(0, 0, Color.DarkGray); // example on how to change a button color
         }
 
-        private void CreateButtonGrid(Panel gridPanel)
+        private void Form1_Load(object sender, EventArgs e)
         {
+            InitializeGrid();
+        }
 
-            int gridSize = 6;
+        private void InitializeGrid()
+        {
+            gridPanel.Controls.Clear();
 
-            this.tableLayoutPanel.RowCount = gridSize;
-            this.tableLayoutPanel.ColumnCount = gridSize;
-            this.tableLayoutPanel.Dock = DockStyle.Fill;
-            this.tableLayoutPanel.BackColor = Color.Transparent;
-
-            for (int i = 0; i < gridSize; i++)
+            for (int row = 0; row < GridSize; row++)
             {
-                this.tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100f / gridSize));
-                this.tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f / gridSize));
-            }
-
-            for (int row = 0; row < gridSize; row++)
-            {
-                for (int col = 0; col < gridSize; col++)
+                for (int col = 0; col < GridSize; col++)
                 {
-                    Button btn = new Button
+                    PictureBox picBox = new PictureBox
                     {
-                        Text = "",
-                        Dock = DockStyle.Fill,
-                        Margin = new Padding(1),
-                        BackColor = Color.Transparent,
-                        Name = $"btn_{row}_{col}",
+                        Size = new Size(ImageSize, ImageSize),
+                        Location = new Point(col * ImageSize, row * ImageSize),
+                        BorderStyle = BorderStyle.FixedSingle,
+                        SizeMode = PictureBoxSizeMode.Zoom,
+                        Tag = new Point(row, col)
                     };
-                    this.tableLayoutPanel.Controls.Add(btn, col, row);
+
+                    picBox.Image = GetDefaultImage(); //this is the empty cell image
+
+                    picBox.MouseDown += PictureBox_MouseDown;
+                    picBox.DragEnter += PictureBox_DragEnter;
+                    picBox.DragDrop += PictureBox_DragDrop;
+                    picBox.MouseEnter += (s, e) => PictureBox_MouseEnter(picBox, e);
+                    picBox.MouseLeave += (s, e) => PictureBox_MouseLeave(picBox, e);
+
+                    gridPanel.Controls.Add(picBox);
                 }
             }
-
-
-            // Add the TableLayoutPanel to the panel
-            gridPanel.Controls.Add(this.tableLayoutPanel);
         }
 
-        private void ChangeButtonColor(int row, int col, Color color)
+        private void InitializeSourcePanel()
         {
-            // Construct the button name using the same pattern you used to name them
-            string buttonName = $"btn_{row}_{col}";
+            sourcePanel.Controls.Clear();
 
-            // Find the button in the TableLayoutPanel by its name
-            Control[] controls = this.tableLayoutPanel.Controls.Find(buttonName, true);
-
-            if (controls.Length > 0 && controls[0] is Button)
+            for (int i = 0; i < 3; i++)
             {
-                Button btn = (Button)controls[0];
-                btn.BackColor = color;
+                PictureBox sourcePicBox = new PictureBox
+                {
+                    Size = new Size(100, 100),
+                    Location = new Point(10, i * 110), // Positioning each PictureBox vertically
+                    Image = GetDefaultImage(), //this is the empty cell image
+                    SizeMode = PictureBoxSizeMode.Zoom,
+                    BorderStyle = BorderStyle.FixedSingle
+                };
+
+                // Enable drag for source images
+                sourcePicBox.MouseDown += (s, e) => SourcePictureBox_MouseDown(sourcePicBox, e);
+
+                sourcePanel.Controls.Add(sourcePicBox);
+            }
+        }
+
+        private void SourcePictureBox_MouseDown(PictureBox? sourcePicBox, MouseEventArgs e)
+        {
+            if (sourcePicBox != null && sourcePicBox.Image != null)
+            {
+                // Start dragging the image from source panel
+                sourcePicBox.DoDragDrop(sourcePicBox.Image, DragDropEffects.Copy);
+            }
+        }
+
+        private Image GetDefaultImage()
+        {
+            return new Bitmap(ImageSize, ImageSize);
+        }
+
+        private void PictureBox_MouseDown(object? sender, MouseEventArgs e)
+        {
+            PictureBox? picBox = sender as PictureBox;
+            if (picBox != null && picBox.Image != null)
+            {
+                picBox.DoDragDrop(picBox.Image, DragDropEffects.Move);
+            }
+        }
+
+        private void PictureBox_DragEnter(object? sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(typeof(Image)))
+            {
+                e.Effect = DragDropEffects.Move;
             }
             else
             {
-                MessageBox.Show($"Button {buttonName} not found!");
+                e.Effect = DragDropEffects.None;
             }
         }
 
+        private void PictureBox_MouseEnter(PictureBox pictureBox, EventArgs e)
+        {
+            pictureBox.BackColor = Color.Moccasin;
+        }
+
+        private void PictureBox_MouseLeave(PictureBox pictureBox, EventArgs e)
+        {
+            pictureBox.BackColor = Color.Wheat;
+        }
+
+        private void PictureBox_DragDrop(object? sender, DragEventArgs e)
+        {
+            PictureBox? targetPicBox = sender as PictureBox;
+
+            if (targetPicBox != null && e.Data.GetDataPresent(typeof(Image)))
+            {
+                targetPicBox.Image = (Image)e.Data.GetData(typeof(Image));
+
+                foreach (PictureBox picBox in gridPanel.Controls)
+                {
+                    if (picBox.Image == targetPicBox.Image && picBox != targetPicBox)
+                    {
+                        picBox.Image = GetDefaultImage();
+                        break;
+                    }
+                }
+            }
+        }
     }
 
 }
