@@ -12,53 +12,34 @@
         GoldBox,
         HeartGem
     }
-
-    public static class TreasureImageLoader
+    public class Treasure : PictureBox
     {
-        private static readonly Dictionary<TreasureImage, Image> treasureImages = new Dictionary<TreasureImage, Image>();
+        public int Points { get; set; }
 
-        static TreasureImageLoader()
+        public Treasure(Size size, Point location)
         {
-            treasureImages[TreasureImage.RedGem] = ByteArrayToImage(Properties.Resources.RedGem);
-            treasureImages[TreasureImage.GoldPile] = ByteArrayToImage(Properties.Resources.GoldPile);
-            treasureImages[TreasureImage.GoldChalice] = ByteArrayToImage(Properties.Resources.GoldChalice);
-            treasureImages[TreasureImage.BlueGem] = ByteArrayToImage(Properties.Resources.BlueGem);
-            treasureImages[TreasureImage.CrystalPot] = ByteArrayToImage(Properties.Resources.CrystalPot);
-            treasureImages[TreasureImage.GoldPot] = ByteArrayToImage(Properties.Resources.GoldPot);
-            treasureImages[TreasureImage.GoldBox] = ByteArrayToImage(Properties.Resources.GoldBox);
-            treasureImages[TreasureImage.HeartGem] = ByteArrayToImage(Properties.Resources.HeartGem);
+            Size = size;
+            Location = location;
+            BorderStyle = BorderStyle.FixedSingle;
+            SizeMode = PictureBoxSizeMode.Zoom;
+            AllowDrop = true;
         }
 
-        private static Image ByteArrayToImage(byte[] byteArray)
+        private static readonly Dictionary<TreasureImage, byte[]> treasureImages = new Dictionary<TreasureImage, byte[]>
         {
-            using (MemoryStream ms = new MemoryStream(byteArray))
-            {
-                return Image.FromStream(ms);
-            }
-        }
+            { TreasureImage.RedGem, Properties.Resources.RedGem },
+            { TreasureImage.GoldPile, Properties.Resources.GoldPile },
+            { TreasureImage.GoldChalice, Properties.Resources.GoldChalice },
+            { TreasureImage.BlueGem, Properties.Resources.BlueGem },
+            { TreasureImage.CrystalPot, Properties.Resources.CrystalPot },
+            { TreasureImage.GoldPot, Properties.Resources.GoldPot },
+            { TreasureImage.GoldBox, Properties.Resources.GoldBox },
+            { TreasureImage.HeartGem, Properties.Resources.HeartGem }
+        };
 
         public static Image GetImage(TreasureImage imageType)
         {
-            return treasureImages[imageType];
-        }
-    }
-    public class Treasure : Asset
-    {
-        public TreasureImage TreasureType { get; private set; } // Specific treasure type
-        public int Points { get; private set; } // Points awarded when found
-
-        public Treasure(TreasureImage treasureType, int size, int points, int goldAmount = 0, bool isRare = false)
-            : base(AssetType.Treasure, size, TreasureImageLoader.GetImage(treasureType), $"A {treasureType} treasure")
-        {
-            TreasureType = treasureType;
-            Points = points;
-        }
-
-        public void DisplayTreasureMessage()
-        {
-            string message = $"Points: {Points}";
-
-            System.Windows.Forms.MessageBox.Show(message, "Treasure Found");
+            return Utils.ByteToImage(treasureImages[imageType]);
         }
     }
 }

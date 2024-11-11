@@ -4,13 +4,13 @@ namespace TreasureHunt
     {
         private enum GameState { Hiding, Searching }
         private GameState currentState = GameState.Hiding;
-        Dictionary<(int, int), PictureBox> pictureBoxGrid = new Dictionary<(int, int), PictureBox>();
+        Dictionary<(int, int), GridCell> assetPosition = new Dictionary<(int, int), GridCell>(); //dictionary where we store the treasure and traps in the row, col that it its
         private int SearchMoves = 5;
 
         TableLayoutPanel tableLayoutPanel = new TableLayoutPanel();
         private const int GridSize = 6; // 6x6 grid
-        private const int ImageSizeW = 132; // Size of each cell
-        private const int ImageSizeH = 122; // Size of each cell 
+        private const int ImageSizeW = 132; // Width of each cell
+        private const int ImageSizeH = 122; // Height of each cell 
         public Form1()
         {
             InitializeComponent();
@@ -31,25 +31,16 @@ namespace TreasureHunt
             {
                 for (int col = 0; col < GridSize; col++)
                 {
-                    PictureBox picBox = new PictureBox
-                    {
-                        Size = new Size(ImageSizeW, ImageSizeH),
-                        Location = new Point(col * ImageSizeW, row * ImageSizeH),
-                        BorderStyle = BorderStyle.FixedSingle,
-                        SizeMode = PictureBoxSizeMode.Zoom,
-                        Tag = new Point(row, col),
-                        AllowDrop = true
-                    };
-                    picBox.Image = GetDefaultImage(); //this is the empty cell image
+                    GridCell gridCell = new GridCell(new Size(ImageSizeW, ImageSizeH), new Point(col * ImageSizeW, row * ImageSizeH));
 
-                    picBox.DragEnter += (s, e) => PictureBox_DragEnter(picBox, e);
-                    picBox.DragDrop += (s, e) => PictureBox_DragDrop(picBox, e);
-                    picBox.MouseEnter += (s, e) => PictureBox_MouseEnter(picBox, e); //hover effect
-                    picBox.MouseLeave += (s, e) => PictureBox_MouseLeave(picBox, e); //remove hover effect
-                    picBox.MouseClick += (s, e) => PictureBox_MouseClick(picBox, e);
+                    gridCell.DragEnter += (s, e) => GridCell_DragEnter(gridCell, e);
+                    gridCell.DragDrop += (s, e) => GridCell_DragDrop(gridCell, e);
+                    gridCell.MouseEnter += (s, e) => GridCell_MouseEnter(gridCell, e); //hover effect
+                    gridCell.MouseLeave += (s, e) => GridCell_MouseLeave(gridCell, e); //remove hover effect
+                    gridCell.MouseClick += (s, e) => GridCell_MouseClick(gridCell, e);
 
-                    gridPanel.Controls.Add(picBox);
-                    pictureBoxGrid[(row, col)] = picBox;
+                    gridPanel.Controls.Add(gridCell);
+                    assetPosition[(row, col)] = gridCell;
                 }
             }
         }
@@ -57,7 +48,7 @@ namespace TreasureHunt
         private void InitializeSourcePanel()
         {
             //remove only the assets
-            foreach (var control in sourcePanel.Controls.OfType<PictureBox>().ToArray())
+            foreach (var control in sourcePanel.Controls.OfType<GridCell>().ToArray())
             {
                 sourcePanel.Controls.Remove(control);
                 control.Dispose();
@@ -83,22 +74,20 @@ namespace TreasureHunt
 
             foreach (var treasureType in treasureTypes)
             {
-                // Create a PictureBox for each treasure
-                PictureBox sourcePicBox = new PictureBox
+                // Create a grid cell for each treasure
+                GridCell sourceCell = new GridCell
                 {
                     Size = new Size(ImageSizeW, ImageSizeH),
                     Location = new Point(30, yOffset),
-                    Image = TreasureImageLoader.GetImage(treasureType),
+                    Image = Treasure.GetImage(treasureType),
                     SizeMode = PictureBoxSizeMode.Zoom,
                     BorderStyle = BorderStyle.FixedSingle,
                     Tag = treasureType, // Store the treasure type in the Tag property for identification
-                    AllowDrop = true,
                     BackColor = Color.Gold
                 };
+                sourceCell.MouseDown += (s, e) => SourceGridCell_MouseDown(sourceCell, e);
 
-                sourcePicBox.MouseDown += (s, e) => SourcePictureBox_MouseDown(sourcePicBox, e);
-
-                sourcePanel.Controls.Add(sourcePicBox);
+                sourcePanel.Controls.Add(sourceCell);
                 yOffset += ImageSizeH + 20;
             }
 
@@ -114,12 +103,12 @@ namespace TreasureHunt
 
             foreach (var trapType in trapTypes)
             {
-                // Create a PictureBox for each treasure
-                PictureBox sourcePicBox = new PictureBox
+                // Create a grid cell for each treasure
+                GridCell sourceGridCell = new GridCell
                 {
                     Size = new Size(ImageSizeW, ImageSizeH),
                     Location = new Point(30, yOffset),
-                    Image = TrapImageLoader.GetImage(trapType),
+                    Image = Trap.GetImage(trapType),
                     SizeMode = PictureBoxSizeMode.Zoom,
                     BorderStyle = BorderStyle.FixedSingle,
                     Tag = trapType, // Store the treasure type in the Tag property for identification
@@ -127,16 +116,16 @@ namespace TreasureHunt
                     BackColor = Color.DarkRed
                 };
 
-                sourcePicBox.MouseDown += (s, e) => SourcePictureBox_MouseDown(sourcePicBox, e);
+                sourceGridCell.MouseDown += (s, e) => SourceGridCell_MouseDown(sourceGridCell, e);
 
-                sourcePanel.Controls.Add(sourcePicBox);
+                sourcePanel.Controls.Add(sourceGridCell);
                 yOffset += ImageSizeH + 20;
             }
         }
 
-        private void SourcePictureBox_MouseDown(PictureBox sourcePicBox, MouseEventArgs e)
+        private void SourceGridCell_MouseDown(GridCell sourceGridCell, MouseEventArgs e)
         {
-            sourcePicBox.DoDragDrop(sourcePicBox, DragDropEffects.Move);
+            sourceGridCell.DoDragDrop(sourceGridCell, DragDropEffects.Move);
         }
 
         private void SourcePanel_MouseDown(Panel sourcePanel, DragEventArgs e)
@@ -144,32 +133,33 @@ namespace TreasureHunt
             e.Effect = DragDropEffects.Move;
         }
 
-        private void PictureBox_MouseClick(PictureBox sourcePicBox, MouseEventArgs e)
+        private void GridCell_MouseClick(GridCell sourceGridCell, MouseEventArgs e)
         {
             if (currentState == GameState.Searching)
             {
 
                 UpdatePLayerMoves();
-                if (SearchMoves == 0)
+                if (sourceGridCell.Tag != null && sourceGridCell.Tag is TreasureImage)
                 {
-                    //end Game
-                    MessageBox.Show("Game Over");
+                    TreasureImage treasureImage = (TreasureImage)sourceGridCell.Tag;
+                    sourceGridCell.Image = Treasure.GetImage(treasureImage);
                 }
-                if (sourcePicBox.Tag != null && sourcePicBox.Tag is TreasureImage)
+                else if (sourceGridCell.Tag != null && sourceGridCell.Tag is TrapImage)
                 {
-                    TreasureImage treasureImage = (TreasureImage)sourcePicBox.Tag;
-                    sourcePicBox.Image = TreasureImageLoader.GetImage(treasureImage);
-                }
-                else if (sourcePicBox.Tag != null && sourcePicBox.Tag is TrapImage)
-                {
-                    TrapImage trapImage = (TrapImage)sourcePicBox.Tag;
-                    sourcePicBox.Image = TrapImageLoader.GetImage(trapImage);
+                    TrapImage trapImage = (TrapImage)sourceGridCell.Tag;
+                    sourceGridCell.Image = Trap.GetImage(trapImage);
                     MessageBox.Show("Trap! You lose 1 move");
                     UpdatePLayerMoves();
                 }
                 else
                 {
-                    sourcePicBox.BackColor = Color.BurlyWood;
+                    sourceGridCell.BackColor = Color.BurlyWood;
+                }
+
+                if (SearchMoves <= 0)
+                {
+                    //end Game
+                    MessageBox.Show("Game Over");
                 }
             }
         }
@@ -183,14 +173,9 @@ namespace TreasureHunt
             }
         }
 
-        private Image GetDefaultImage()
+        private void GridCell_DragEnter(GridCell targetGridCell, DragEventArgs e)
         {
-            return new Bitmap(ImageSizeW, ImageSizeH);
-        }
-
-        private void PictureBox_DragEnter(PictureBox targetPicBox, DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(typeof(PictureBox)))
+            if (e.Data.GetDataPresent(typeof(GridCell)))
             {
                 e.Effect = DragDropEffects.Move;
             }
@@ -200,42 +185,42 @@ namespace TreasureHunt
             }
         }
 
-        private void PictureBox_MouseEnter(PictureBox pictureBox, EventArgs e)
+        private void GridCell_MouseEnter(GridCell gridCell, EventArgs e)
         {
-            pictureBox.BackColor = Color.Moccasin;
+            gridCell.BackColor = Color.Moccasin;
         }
 
-        private void PictureBox_MouseLeave(PictureBox pictureBox, EventArgs e)
+        private void GridCell_MouseLeave(GridCell gridcell, EventArgs e)
         {
-            pictureBox.BackColor = Color.Wheat;
+            gridcell.BackColor = Color.Wheat;
         }
 
-        private void PictureBox_DragDrop(PictureBox targetPicBox, DragEventArgs e)
+        private void GridCell_DragDrop(GridCell targetGridCell, DragEventArgs e)
         {
-            PictureBox sourcePicBox = e.Data.GetData(typeof(PictureBox)) as PictureBox;
-            if (sourcePicBox != null && targetPicBox != sourcePicBox)
+            GridCell sourceGridCell = e.Data.GetData(typeof(GridCell)) as GridCell;
+            if (sourceGridCell != null && targetGridCell != sourceGridCell)
             {
-                if (sourcePicBox.Parent == sourcePanel)
+                if (sourceGridCell.Parent == sourcePanel)
                 {
                     // Move image from source to target
-                    targetPicBox.Image = sourcePicBox.Image;
-                    targetPicBox.Tag = sourcePicBox.Tag;
+                    targetGridCell.Image = sourceGridCell.Image;
+                    targetGridCell.Tag = sourceGridCell.Tag;
 
-                    // Remove source PictureBox from sourcePanel
-                    sourcePanel.Controls.Remove(sourcePicBox);
-                    sourcePicBox.Dispose(); // Optionally dispose of the control
+                    // Remove source grid cell from sourcePanel
+                    sourcePanel.Controls.Remove(sourceGridCell);
+                    sourceGridCell.Dispose(); // Optionally dispose of the control
                 }
                 else
                 {
                     // Swap images between grid cells
-                    Image tempImage = targetPicBox.Image;
-                    targetPicBox.Image = sourcePicBox.Image;
-                    sourcePicBox.Image = tempImage;
+                    Image tempImage = targetGridCell.Image;
+                    targetGridCell.Image = sourceGridCell.Image;
+                    sourceGridCell.Image = tempImage;
 
                     // Swap tags between grid cells
-                    object tempTag = targetPicBox.Tag;
-                    targetPicBox.Tag = sourcePicBox.Tag;
-                    sourcePicBox.Tag = tempTag;
+                    object tempTag = targetGridCell.Tag;
+                    targetGridCell.Tag = sourceGridCell.Tag;
+                    sourceGridCell.Tag = tempTag;
                 }
             }
         }
@@ -272,7 +257,7 @@ namespace TreasureHunt
             {
                 for (int col = 0; col < GridSize; col++)
                 {
-                    pictureBoxGrid[(row, col)].Image = GetDefaultImage();
+                    assetPosition[(row, col)].SetDefaultImage();
                 }
             }
         }
