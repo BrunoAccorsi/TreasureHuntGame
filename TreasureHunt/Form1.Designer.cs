@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             gridPanel = new Panel();
             sourcePanel = new Panel();
             label1 = new Label();
@@ -45,7 +44,7 @@
             // 
             gridPanel.AllowDrop = true;
             gridPanel.BackColor = Color.Wheat;
-            gridPanel.Location = new Point(278, 276);
+            gridPanel.Location = new Point(255, 262);
             gridPanel.Name = "gridPanel";
             gridPanel.Size = new Size(780, 728);
             gridPanel.TabIndex = 0;
@@ -56,7 +55,7 @@
             sourcePanel.AutoScroll = true;
             sourcePanel.BackColor = Color.Wheat;
             sourcePanel.Controls.Add(label1);
-            sourcePanel.Location = new Point(12, 276);
+            sourcePanel.Location = new Point(12, 262);
             sourcePanel.Name = "sourcePanel";
             sourcePanel.Size = new Size(200, 728);
             sourcePanel.TabIndex = 1;
@@ -74,9 +73,12 @@
             // panel1
             // 
             panel1.AutoScroll = true;
-            panel1.BackgroundImage = (Image)resources.GetObject("panel1.BackgroundImage");
+            panel1.BackColor = Color.SteelBlue;
+            panel1.BackgroundImage = Properties.Resources.Background;
             panel1.BackgroundImageLayout = ImageLayout.None;
+            panel1.Controls.Add(sourcePanel);
             panel1.Controls.Add(gameStatePanel);
+            panel1.Controls.Add(gridPanel);
             panel1.Dock = DockStyle.Fill;
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
@@ -88,7 +90,7 @@
             gameStatePanel.BackColor = Color.Wheat;
             gameStatePanel.Controls.Add(endTurnButton);
             gameStatePanel.Controls.Add(turnLabel);
-            gameStatePanel.Location = new Point(12, 124);
+            gameStatePanel.Location = new Point(12, 132);
             gameStatePanel.Name = "gameStatePanel";
             gameStatePanel.Size = new Size(200, 100);
             gameStatePanel.TabIndex = 0;
@@ -122,8 +124,6 @@
             BackColor = Color.Black;
             BackgroundImageLayout = ImageLayout.Center;
             ClientSize = new Size(1272, 1109);
-            Controls.Add(sourcePanel);
-            Controls.Add(gridPanel);
             Controls.Add(panel1);
             DoubleBuffered = true;
             Name = "Form1";
