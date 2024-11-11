@@ -33,6 +33,7 @@ namespace TreasureHunt
                 {
                     GridCell gridCell = new GridCell(new Size(ImageSizeW, ImageSizeH), new Point(col * ImageSizeW, row * ImageSizeH));
 
+                    gridCell.MouseDown += (s, e) => GridCell_MouseDown(gridCell, e);
                     gridCell.DragEnter += (s, e) => GridCell_DragEnter(gridCell, e);
                     gridCell.DragDrop += (s, e) => GridCell_DragDrop(gridCell, e);
                     gridCell.MouseEnter += (s, e) => GridCell_MouseEnter(gridCell, e); //hover effect
@@ -43,6 +44,12 @@ namespace TreasureHunt
                     assetPosition[(row, col)] = gridCell;
                 }
             }
+        }
+
+        private void GridCell_MouseDown(GridCell gridCell, MouseEventArgs e)
+        {
+            if (currentState == GameState.Hiding)
+                gridCell.DoDragDrop(gridCell, DragDropEffects.Move);
         }
 
         private void InitializeSourcePanel()
