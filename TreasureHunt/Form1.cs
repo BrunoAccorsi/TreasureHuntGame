@@ -41,11 +41,11 @@ namespace TreasureHunt
                     };
                     picBox.Image = GetDefaultImage(); //this is the empty cell image
 
-                    picBox.MouseDown += (s, e) => PictureBox_MouseDown(picBox, e);
                     picBox.DragEnter += (s, e) => PictureBox_DragEnter(picBox, e);
                     picBox.DragDrop += (s, e) => PictureBox_DragDrop(picBox, e);
                     picBox.MouseEnter += (s, e) => PictureBox_MouseEnter(picBox, e); //hover effect
                     picBox.MouseLeave += (s, e) => PictureBox_MouseLeave(picBox, e); //remove hover effect
+                    picBox.MouseClick += (s, e) => PictureBox_MouseClick(picBox, e);
 
                     gridPanel.Controls.Add(picBox);
                     pictureBoxGrid[(row, col)] = picBox;
@@ -141,14 +141,26 @@ namespace TreasureHunt
             e.Effect = DragDropEffects.Move;
         }
 
+        private void PictureBox_MouseClick(PictureBox sourcePicBox, MouseEventArgs e)
+        {
+            if (currentState == GameState.Searching)
+            {
+                if (sourcePicBox.Tag != null && sourcePicBox.Tag is TreasureImage)
+                {
+                    TreasureImage treasureImage = (TreasureImage)sourcePicBox.Tag;
+                    sourcePicBox.Image = TreasureImageLoader.GetImage(treasureImage);
+                }
+                else if (sourcePicBox.Tag != null && sourcePicBox.Tag is TrapImage)
+                {
+                    TrapImage trapImage = (TrapImage)sourcePicBox.Tag;
+                    sourcePicBox.Image = TrapImageLoader.GetImage(trapImage);
+                }
+            }
+        }
+
         private Image GetDefaultImage()
         {
             return new Bitmap(ImageSizeW, ImageSizeH);
-        }
-
-        private void PictureBox_MouseDown(PictureBox targetPicBox, MouseEventArgs e)
-        {
-            targetPicBox.DoDragDrop(targetPicBox, DragDropEffects.Move);
         }
 
         private void PictureBox_DragEnter(PictureBox targetPicBox, DragEventArgs e)
