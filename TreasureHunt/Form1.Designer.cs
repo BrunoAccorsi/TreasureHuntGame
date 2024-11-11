@@ -33,7 +33,12 @@
             sourcePanel = new Panel();
             label1 = new Label();
             panel1 = new Panel();
+            panel2 = new Panel();
+            endTurnButton = new Button();
+            label2 = new Label();
             sourcePanel.SuspendLayout();
+            panel1.SuspendLayout();
+            panel2.SuspendLayout();
             SuspendLayout();
             // 
             // gridPanel
@@ -71,11 +76,43 @@
             panel1.AutoScroll = true;
             panel1.BackgroundImage = (Image)resources.GetObject("panel1.BackgroundImage");
             panel1.BackgroundImageLayout = ImageLayout.None;
+            panel1.Controls.Add(panel2);
             panel1.Dock = DockStyle.Fill;
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
             panel1.Size = new Size(1272, 1109);
             panel1.TabIndex = 0;
+            // 
+            // panel2
+            // 
+            panel2.BackColor = Color.Wheat;
+            panel2.Controls.Add(endTurnButton);
+            panel2.Controls.Add(label2);
+            panel2.Location = new Point(12, 124);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(200, 100);
+            panel2.TabIndex = 0;
+            // 
+            // endTurnButton
+            // 
+            endTurnButton.BackColor = Color.Tan;
+            endTurnButton.Location = new Point(10, 64);
+            endTurnButton.Name = "endTurnButton";
+            endTurnButton.Size = new Size(178, 23);
+            endTurnButton.TabIndex = 2;
+            endTurnButton.Text = "End Turn";
+            endTurnButton.UseVisualStyleBackColor = false;
+            endTurnButton.Click += endTurnButton_Click;
+            // 
+            // label2
+            // 
+            label2.Font = new Font("Tahoma", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label2.Location = new Point(10, 11);
+            label2.Name = "label2";
+            label2.Size = new Size(178, 76);
+            label2.TabIndex = 1;
+            label2.Text = " Player 1 (Hider) turn";
+            label2.TextAlign = ContentAlignment.TopCenter;
             // 
             // Form1
             // 
@@ -92,6 +129,8 @@
             Text = "Form1";
             Load += Form1_Load;
             sourcePanel.ResumeLayout(false);
+            panel1.ResumeLayout(false);
+            panel2.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -101,5 +140,8 @@
         private Panel sourcePanel;
         private Label label1;
         private Panel panel1;
+        private Panel panel2;
+        private Button endTurnButton;
+        private Label label2;
     }
 }

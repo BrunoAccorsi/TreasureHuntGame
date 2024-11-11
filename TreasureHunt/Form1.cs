@@ -4,6 +4,7 @@ namespace TreasureHunt
     {
         private enum GameState { Hiding, Searching }
         private GameState currentState = GameState.Hiding;
+        Dictionary<(int, int), PictureBox> pictureBoxGrid = new Dictionary<(int, int), PictureBox>();
 
         TableLayoutPanel tableLayoutPanel = new TableLayoutPanel();
         private const int GridSize = 6; // 6x6 grid
@@ -47,6 +48,7 @@ namespace TreasureHunt
                     picBox.MouseLeave += (s, e) => PictureBox_MouseLeave(picBox, e); //remove hover effect
 
                     gridPanel.Controls.Add(picBox);
+                    pictureBoxGrid[(row, col)] = picBox;
                 }
             }
         }
@@ -67,6 +69,17 @@ namespace TreasureHunt
             var trapTypes = Enum.GetValues(typeof(TrapImage)).Cast<TrapImage>().OrderBy(x => random.Next()).Take(2);
 
             int yOffset = 100;
+
+            sourcePanel.Controls.Add(new Label()
+            {
+                Font = new Font("Tahoma", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0),
+                Location = new Point(10, yOffset),
+                Size = new Size(178, 40),
+                Text = "Treasures",
+                TextAlign = ContentAlignment.TopCenter
+            });
+            yOffset += 40;
+
             foreach (var treasureType in treasureTypes)
             {
                 // Create a PictureBox for each treasure
@@ -84,8 +97,18 @@ namespace TreasureHunt
                 sourcePicBox.MouseDown += (s, e) => SourcePictureBox_MouseDown(sourcePicBox, e);
 
                 sourcePanel.Controls.Add(sourcePicBox);
-                yOffset += ImageSizeW + 20;
+                yOffset += ImageSizeH + 20;
             }
+
+            sourcePanel.Controls.Add(new Label()
+            {
+                Font = new Font("Tahoma", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0),
+                Location = new Point(10, yOffset),
+                Size = new Size(178, 40),
+                Text = "Traps",
+                TextAlign = ContentAlignment.TopCenter
+            });
+            yOffset += 40;
 
             foreach (var trapType in trapTypes)
             {
@@ -104,7 +127,7 @@ namespace TreasureHunt
                 sourcePicBox.MouseDown += (s, e) => SourcePictureBox_MouseDown(sourcePicBox, e);
 
                 sourcePanel.Controls.Add(sourcePicBox);
-                yOffset += ImageSizeW + 20;
+                yOffset += ImageSizeH + 20;
             }
         }
 
@@ -172,10 +195,36 @@ namespace TreasureHunt
                     targetPicBox.Image = sourcePicBox.Image;
                     sourcePicBox.Image = tempImage;
 
-                    // Swap Tags if necessary
+                    // Swap tags between grid cells
                     object tempTag = targetPicBox.Tag;
                     targetPicBox.Tag = sourcePicBox.Tag;
                     sourcePicBox.Tag = tempTag;
+                }
+            }
+        }
+
+        private void endTurnButton_Click(object sender, EventArgs e)
+        {
+            GameState nextStage = currentState == GameState.Hiding ? GameState.Searching : GameState.Hiding;
+            currentState = nextStage;
+
+            if (nextStage == GameState.Searching)
+            {
+                // Hide the source panel
+                sourcePanel.Visible = false;
+                endTurnButton.Text = "End Game";
+
+                handleSearchState();
+            }
+        }
+
+        private void handleSearchState()
+        {
+            for (int row = 0; row < GridSize; row++)
+            {
+                for (int col = 0; col < GridSize; col++)
+                {
+                    pictureBoxGrid[(row, col)].Image = GetDefaultImage();
                 }
             }
         }
