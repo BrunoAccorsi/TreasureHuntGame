@@ -103,6 +103,16 @@ namespace TreasureHunt.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] CursedPotion2 {
+            get {
+                object obj = ResourceManager.GetObject("CursedPotion2", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] GoldBox {
             get {
                 object obj = ResourceManager.GetObject("GoldBox", resourceCulture);

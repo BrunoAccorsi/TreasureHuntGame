@@ -6,6 +6,7 @@
         Skull,
         BombTrap,
         CursedPotion,
+        CursedPotion2,
     }
 
     public static class TrapImageLoader
@@ -17,6 +18,7 @@
             trapImages[TrapImage.BombTrap] = ByteArrayToImage(Properties.Resources.BombTrap);
             trapImages[TrapImage.Skull] = ByteArrayToImage(Properties.Resources.SkullCurse);
             trapImages[TrapImage.CursedPotion] = ByteArrayToImage(Properties.Resources.CursedPotion);
+            trapImages[TrapImage.CursedPotion2] = ByteArrayToImage(Properties.Resources.CursedPotion2);
         }
 
         private static Image ByteArrayToImage(byte[] byteArray)

@@ -33,12 +33,12 @@
             sourcePanel = new Panel();
             label1 = new Label();
             panel1 = new Panel();
-            panel2 = new Panel();
+            gameStatePanel = new Panel();
             endTurnButton = new Button();
             turnLabel = new Label();
             sourcePanel.SuspendLayout();
             panel1.SuspendLayout();
-            panel2.SuspendLayout();
+            gameStatePanel.SuspendLayout();
             SuspendLayout();
             // 
             // gridPanel
@@ -76,22 +76,22 @@
             panel1.AutoScroll = true;
             panel1.BackgroundImage = (Image)resources.GetObject("panel1.BackgroundImage");
             panel1.BackgroundImageLayout = ImageLayout.None;
-            panel1.Controls.Add(panel2);
+            panel1.Controls.Add(gameStatePanel);
             panel1.Dock = DockStyle.Fill;
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
             panel1.Size = new Size(1272, 1109);
             panel1.TabIndex = 0;
             // 
-            // panel2
+            // gameStatePanel
             // 
-            panel2.BackColor = Color.Wheat;
-            panel2.Controls.Add(endTurnButton);
-            panel2.Controls.Add(turnLabel);
-            panel2.Location = new Point(12, 124);
-            panel2.Name = "panel2";
-            panel2.Size = new Size(200, 100);
-            panel2.TabIndex = 0;
+            gameStatePanel.BackColor = Color.Wheat;
+            gameStatePanel.Controls.Add(endTurnButton);
+            gameStatePanel.Controls.Add(turnLabel);
+            gameStatePanel.Location = new Point(12, 124);
+            gameStatePanel.Name = "gameStatePanel";
+            gameStatePanel.Size = new Size(200, 100);
+            gameStatePanel.TabIndex = 0;
             // 
             // endTurnButton
             // 
@@ -131,7 +131,7 @@
             Load += Form1_Load;
             sourcePanel.ResumeLayout(false);
             panel1.ResumeLayout(false);
-            panel2.ResumeLayout(false);
+            gameStatePanel.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -141,7 +141,7 @@
         private Panel sourcePanel;
         private Label label1;
         private Panel panel1;
-        private Panel panel2;
+        private Panel gameStatePanel;
         private Button endTurnButton;
         private Label turnLabel;
     }

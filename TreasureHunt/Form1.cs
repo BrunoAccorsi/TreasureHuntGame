@@ -5,6 +5,7 @@ namespace TreasureHunt
         private enum GameState { Hiding, Searching }
         private GameState currentState = GameState.Hiding;
         Dictionary<(int, int), PictureBox> pictureBoxGrid = new Dictionary<(int, int), PictureBox>();
+        private int SearchMoves = 5;
 
         TableLayoutPanel tableLayoutPanel = new TableLayoutPanel();
         private const int GridSize = 6; // 6x6 grid
@@ -91,7 +92,8 @@ namespace TreasureHunt
                     SizeMode = PictureBoxSizeMode.Zoom,
                     BorderStyle = BorderStyle.FixedSingle,
                     Tag = treasureType, // Store the treasure type in the Tag property for identification
-                    AllowDrop = true
+                    AllowDrop = true,
+                    BackColor = Color.Gold
                 };
 
                 sourcePicBox.MouseDown += (s, e) => SourcePictureBox_MouseDown(sourcePicBox, e);
@@ -121,7 +123,8 @@ namespace TreasureHunt
                     SizeMode = PictureBoxSizeMode.Zoom,
                     BorderStyle = BorderStyle.FixedSingle,
                     Tag = trapType, // Store the treasure type in the Tag property for identification
-                    AllowDrop = true
+                    AllowDrop = true,
+                    BackColor = Color.DarkRed
                 };
 
                 sourcePicBox.MouseDown += (s, e) => SourcePictureBox_MouseDown(sourcePicBox, e);
@@ -145,6 +148,13 @@ namespace TreasureHunt
         {
             if (currentState == GameState.Searching)
             {
+
+                UpdatePLayerMoves();
+                if (SearchMoves == 0)
+                {
+                    //end Game
+                    MessageBox.Show("Game Over");
+                }
                 if (sourcePicBox.Tag != null && sourcePicBox.Tag is TreasureImage)
                 {
                     TreasureImage treasureImage = (TreasureImage)sourcePicBox.Tag;
@@ -154,11 +164,22 @@ namespace TreasureHunt
                 {
                     TrapImage trapImage = (TrapImage)sourcePicBox.Tag;
                     sourcePicBox.Image = TrapImageLoader.GetImage(trapImage);
+                    MessageBox.Show("Trap! You lose 1 move");
+                    UpdatePLayerMoves();
                 }
                 else
                 {
                     sourcePicBox.BackColor = Color.BurlyWood;
                 }
+            }
+        }
+
+        private void UpdatePLayerMoves()
+        {
+            if (currentState == GameState.Searching)
+            {
+                SearchMoves--;
+                gameStatePanel.Controls.Find("playerMoves", true).First().Text = $"{SearchMoves} moves left";
             }
         }
 
@@ -230,6 +251,16 @@ namespace TreasureHunt
                 sourcePanel.Visible = false;
                 endTurnButton.Text = "End Game";
                 turnLabel.Text = "Player 2 (Finder) turn";
+
+                Label playerMoves = new Label
+                {
+                    Text = $"{SearchMoves} moves left",
+                    Location = new Point(10, 40),
+                    Size = new Size(179, 29),
+                    ForeColor = Color.Red,
+                    Name = "playerMoves"
+                };
+                gameStatePanel.Controls.Add(playerMoves);
 
                 handleSearchState();
             }
