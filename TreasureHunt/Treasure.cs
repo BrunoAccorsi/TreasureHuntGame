@@ -1,7 +1,7 @@
 ﻿namespace TreasureHunt
 {
 
-    public enum TreasureImage
+    public enum TreasureTyles
     {
         RedGem,
         GoldPile,
@@ -12,32 +12,29 @@
         GoldBox,
         HeartGem
     }
-    public class Treasure : PictureBox
+    public class Treasure
     {
         public int Points { get; set; }
+        public Image Image { get; set; }
 
-        public Treasure(Size size, Point location)
+        public Treasure(TreasureTyles type)
         {
-            Size = size;
-            Location = location;
-            BorderStyle = BorderStyle.FixedSingle;
-            SizeMode = PictureBoxSizeMode.Zoom;
-            AllowDrop = true;
+            Image = GetImage(type);
         }
 
-        private static readonly Dictionary<TreasureImage, byte[]> treasureImages = new Dictionary<TreasureImage, byte[]>
+        private static readonly Dictionary<TreasureTyles, byte[]> treasureImages = new Dictionary<TreasureTyles, byte[]>
         {
-            { TreasureImage.RedGem, Properties.Resources.RedGem },
-            { TreasureImage.GoldPile, Properties.Resources.GoldPile },
-            { TreasureImage.GoldChalice, Properties.Resources.GoldChalice },
-            { TreasureImage.BlueGem, Properties.Resources.BlueGem },
-            { TreasureImage.CrystalPot, Properties.Resources.CrystalPot },
-            { TreasureImage.GoldPot, Properties.Resources.GoldPot },
-            { TreasureImage.GoldBox, Properties.Resources.GoldBox },
-            { TreasureImage.HeartGem, Properties.Resources.HeartGem }
+            { TreasureTyles.RedGem, Properties.Resources.RedGem },
+            { TreasureTyles.GoldPile, Properties.Resources.GoldPile },
+            { TreasureTyles.GoldChalice, Properties.Resources.GoldChalice },
+            { TreasureTyles.BlueGem, Properties.Resources.BlueGem },
+            { TreasureTyles.CrystalPot, Properties.Resources.CrystalPot },
+            { TreasureTyles.GoldPot, Properties.Resources.GoldPot },
+            { TreasureTyles.GoldBox, Properties.Resources.GoldBox },
+            { TreasureTyles.HeartGem, Properties.Resources.HeartGem }
         };
 
-        public static Image GetImage(TreasureImage imageType)
+        private Image GetImage(TreasureTyles imageType)
         {
             return Utils.ByteToImage(treasureImages[imageType]);
         }

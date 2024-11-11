@@ -1,7 +1,7 @@
 ﻿namespace TreasureHunt
 {
 
-    public enum TrapImage
+    public enum TrapTypes
     {
         Skull,
         BombTrap,
@@ -10,15 +10,20 @@
     }
     public class Trap
     {
-        private static readonly Dictionary<TrapImage, byte[]> trapImages = new Dictionary<TrapImage, byte[]>
+        public Image Image { get; set; }
+        public Trap(TrapTypes type)
         {
-            { TrapImage.BombTrap, Properties.Resources.BombTrap },
-            { TrapImage.Skull, Properties.Resources.SkullCurse },
-            { TrapImage.CursedPotion, Properties.Resources.CursedPotion },
-            { TrapImage.CursedPotion2, Properties.Resources.CursedPotion2 }
+            Image = GetImage(type);
+        }
+        private static readonly Dictionary<TrapTypes, byte[]> trapImages = new Dictionary<TrapTypes, byte[]>
+        {
+            { TrapTypes.BombTrap, Properties.Resources.BombTrap },
+            { TrapTypes.Skull, Properties.Resources.SkullCurse },
+            { TrapTypes.CursedPotion, Properties.Resources.CursedPotion },
+            { TrapTypes.CursedPotion2, Properties.Resources.CursedPotion2 }
         };
 
-        public static Image GetImage(TrapImage imageType)
+        private Image GetImage(TrapTypes imageType)
         {
             return Utils.ByteToImage(trapImages[imageType]);
         }

@@ -4,7 +4,12 @@ namespace TreasureHunt
     {
         private enum GameState { Hiding, Searching }
         private GameState currentState = GameState.Hiding;
-        Dictionary<(int, int), GridCell> assetPosition = new Dictionary<(int, int), GridCell>(); //dictionary where we store the treasure and traps in the row, col that it its
+
+        Dictionary<(int, int), GridCell> cellPosition = new Dictionary<(int, int), GridCell>(); //dictionary so we can retrieve the cell by its row and col
+        Dictionary<TreasureTyles, Treasure> treasuresByImage = new Dictionary<TreasureTyles, Treasure>(); //dictionary so we can retrieve the treasures by its row and col
+        Dictionary<TrapTypes, Trap> trapsByImage = new Dictionary<TrapTypes, Trap>(); //dictionary so we can retrieve the trap by its row and col
+
+
         private int SearchMoves = 5;
 
         TableLayoutPanel tableLayoutPanel = new TableLayoutPanel();
@@ -41,7 +46,7 @@ namespace TreasureHunt
                     gridCell.MouseClick += (s, e) => GridCell_MouseClick(gridCell, e);
 
                     gridPanel.Controls.Add(gridCell);
-                    assetPosition[(row, col)] = gridCell;
+                    cellPosition[(row, col)] = gridCell;
                 }
             }
         }
@@ -64,8 +69,8 @@ namespace TreasureHunt
             sourcePanel.DragEnter += (s, e) => SourcePanel_MouseDown(sourcePanel, e);
 
             Random random = new Random();
-            var treasureTypes = Enum.GetValues(typeof(TreasureImage)).Cast<TreasureImage>().OrderBy(x => random.Next()).Take(3);
-            var trapTypes = Enum.GetValues(typeof(TrapImage)).Cast<TrapImage>().OrderBy(x => random.Next()).Take(2);
+            var treasureTypes = Enum.GetValues(typeof(TreasureTyles)).Cast<TreasureTyles>().OrderBy(x => random.Next()).Take(3);
+            var trapTypes = Enum.GetValues(typeof(TrapTypes)).Cast<TrapTypes>().OrderBy(x => random.Next()).Take(2);
 
             int yOffset = 100;
 
@@ -81,21 +86,27 @@ namespace TreasureHunt
 
             foreach (var treasureType in treasureTypes)
             {
+                treasuresByImage[treasureType] = new Treasure(treasureType)
+                {
+                    Points = 10
+                };
                 // Create a grid cell for each treasure
                 GridCell sourceCell = new GridCell
                 {
                     Size = new Size(ImageSizeW, ImageSizeH),
                     Location = new Point(30, yOffset),
-                    Image = Treasure.GetImage(treasureType),
+                    Image = treasuresByImage[treasureType].Image,
                     SizeMode = PictureBoxSizeMode.Zoom,
                     BorderStyle = BorderStyle.FixedSingle,
                     Tag = treasureType, // Store the treasure type in the Tag property for identification
-                    BackColor = Color.Gold
+                    BackColor = Color.Gold,
+                    CellType = CellTypes.Treasure
                 };
                 sourceCell.MouseDown += (s, e) => SourceGridCell_MouseDown(sourceCell, e);
 
                 sourcePanel.Controls.Add(sourceCell);
                 yOffset += ImageSizeH + 20;
+
             }
 
             sourcePanel.Controls.Add(new Label()
@@ -110,17 +121,20 @@ namespace TreasureHunt
 
             foreach (var trapType in trapTypes)
             {
+                trapsByImage[trapType] = new Trap(trapType);
+
                 // Create a grid cell for each treasure
                 GridCell sourceGridCell = new GridCell
                 {
                     Size = new Size(ImageSizeW, ImageSizeH),
                     Location = new Point(30, yOffset),
-                    Image = Trap.GetImage(trapType),
+                    Image = trapsByImage[trapType].Image,
                     SizeMode = PictureBoxSizeMode.Zoom,
                     BorderStyle = BorderStyle.FixedSingle,
                     Tag = trapType, // Store the treasure type in the Tag property for identification
                     AllowDrop = true,
-                    BackColor = Color.DarkRed
+                    BackColor = Color.DarkRed,
+                    CellType = CellTypes.Trap
                 };
 
                 sourceGridCell.MouseDown += (s, e) => SourceGridCell_MouseDown(sourceGridCell, e);
@@ -144,19 +158,22 @@ namespace TreasureHunt
         {
             if (currentState == GameState.Searching)
             {
-
                 UpdatePLayerMoves();
-                if (sourceGridCell.Tag != null && sourceGridCell.Tag is TreasureImage)
+                if (sourceGridCell.CellType == CellTypes.Treasure)
                 {
-                    TreasureImage treasureImage = (TreasureImage)sourceGridCell.Tag;
-                    sourceGridCell.Image = Treasure.GetImage(treasureImage);
+                    if (sourceGridCell.Tag is TreasureTyles treasureType)
+                    {
+                        sourceGridCell.Image = treasuresByImage[treasureType].Image;
+                    }
                 }
-                else if (sourceGridCell.Tag != null && sourceGridCell.Tag is TrapImage)
+                else if (sourceGridCell.CellType == CellTypes.Trap)
                 {
-                    TrapImage trapImage = (TrapImage)sourceGridCell.Tag;
-                    sourceGridCell.Image = Trap.GetImage(trapImage);
-                    MessageBox.Show("Trap! You lose 1 move");
-                    UpdatePLayerMoves();
+                    if (sourceGridCell.Tag is TrapTypes trapType)
+                    {
+                        sourceGridCell.Image = trapsByImage[trapType].Image;
+                        MessageBox.Show("Trap! You lose 1 move");
+                        UpdatePLayerMoves();
+                    }
                 }
                 else
                 {
@@ -211,6 +228,7 @@ namespace TreasureHunt
                 {
                     // Move image from source to target
                     targetGridCell.Image = sourceGridCell.Image;
+                    targetGridCell.CellType = sourceGridCell.CellType;
                     targetGridCell.Tag = sourceGridCell.Tag;
 
                     // Remove source grid cell from sourcePanel
@@ -223,6 +241,11 @@ namespace TreasureHunt
                     Image tempImage = targetGridCell.Image;
                     targetGridCell.Image = sourceGridCell.Image;
                     sourceGridCell.Image = tempImage;
+
+                    // Swap types between grid cells
+                    CellTypes tempType = targetGridCell.CellType;
+                    targetGridCell.CellType = sourceGridCell.CellType;
+                    sourceGridCell.CellType = tempType;
 
                     // Swap tags between grid cells
                     object tempTag = targetGridCell.Tag;
@@ -264,7 +287,7 @@ namespace TreasureHunt
             {
                 for (int col = 0; col < GridSize; col++)
                 {
-                    assetPosition[(row, col)].SetDefaultImage();
+                    cellPosition[(row, col)].SetDefaultImage();
                 }
             }
         }

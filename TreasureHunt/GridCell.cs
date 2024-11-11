@@ -1,7 +1,16 @@
 ﻿namespace TreasureHunt
 {
+    public enum CellTypes
+    {
+        Treasure,
+        Trap,
+        Blank
+    }
     public class GridCell : PictureBox
     {
+        public CellTypes CellType { get; set; }
+
+
         public GridCell() { }
         public GridCell(Size size, Point location)
         {
@@ -11,6 +20,7 @@
             SizeMode = PictureBoxSizeMode.Zoom;
             AllowDrop = true;
             Image = GetDefaultImage();
+            CellType = CellTypes.Blank;
         }
 
         private Image GetDefaultImage()
