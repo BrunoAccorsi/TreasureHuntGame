@@ -74,7 +74,7 @@
             // 
             panel1.AutoScroll = true;
             panel1.BackColor = Color.SteelBlue;
-            panel1.BackgroundImage = Properties.Resources.Background;
+            panel1.BackgroundImage = Properties.Resources.Background1;
             panel1.BackgroundImageLayout = ImageLayout.None;
             panel1.Controls.Add(sourcePanel);
             panel1.Controls.Add(gameStatePanel);

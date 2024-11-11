@@ -63,9 +63,9 @@ namespace TreasureHunt.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Background {
+        internal static System.Drawing.Bitmap Background1 {
             get {
-                object obj = ResourceManager.GetObject("Background", resourceCulture);
+                object obj = ResourceManager.GetObject("Background1", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -177,16 +177,6 @@ namespace TreasureHunt.Properties {
             get {
                 object obj = ResourceManager.GetObject("RedGem", resourceCulture);
                 return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap Screen {
-            get {
-                object obj = ResourceManager.GetObject("Screen", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
