@@ -35,7 +35,7 @@
             panel1 = new Panel();
             panel2 = new Panel();
             endTurnButton = new Button();
-            label2 = new Label();
+            turnLabel = new Label();
             sourcePanel.SuspendLayout();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
@@ -87,7 +87,7 @@
             // 
             panel2.BackColor = Color.Wheat;
             panel2.Controls.Add(endTurnButton);
-            panel2.Controls.Add(label2);
+            panel2.Controls.Add(turnLabel);
             panel2.Location = new Point(12, 124);
             panel2.Name = "panel2";
             panel2.Size = new Size(200, 100);
@@ -104,20 +104,21 @@
             endTurnButton.UseVisualStyleBackColor = false;
             endTurnButton.Click += endTurnButton_Click;
             // 
-            // label2
+            // turnLabel
             // 
-            label2.Font = new Font("Tahoma", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label2.Location = new Point(10, 11);
-            label2.Name = "label2";
-            label2.Size = new Size(178, 76);
-            label2.TabIndex = 1;
-            label2.Text = " Player 1 (Hider) turn";
-            label2.TextAlign = ContentAlignment.TopCenter;
+            turnLabel.Font = new Font("Tahoma", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            turnLabel.Location = new Point(10, 11);
+            turnLabel.Name = "turnLabel";
+            turnLabel.Size = new Size(178, 29);
+            turnLabel.TabIndex = 1;
+            turnLabel.Text = " Player 1 (Hider) turn";
+            turnLabel.TextAlign = ContentAlignment.TopCenter;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            AutoScroll = true;
             BackColor = Color.Black;
             BackgroundImageLayout = ImageLayout.Center;
             ClientSize = new Size(1272, 1109);
@@ -142,6 +143,6 @@
         private Panel panel1;
         private Panel panel2;
         private Button endTurnButton;
-        private Label label2;
+        private Label turnLabel;
     }
 }

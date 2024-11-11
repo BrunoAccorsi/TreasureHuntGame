@@ -63,6 +63,16 @@ namespace TreasureHunt.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] BlueGem {
+            get {
+                object obj = ResourceManager.GetObject("BlueGem", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] BombTrap {
             get {
                 object obj = ResourceManager.GetObject("BombTrap", resourceCulture);
@@ -73,9 +83,29 @@ namespace TreasureHunt.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] CrystalPot {
+            get {
+                object obj = ResourceManager.GetObject("CrystalPot", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] CursedPotion {
             get {
                 object obj = ResourceManager.GetObject("CursedPotion", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] GoldBox {
+            get {
+                object obj = ResourceManager.GetObject("GoldBox", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -96,6 +126,26 @@ namespace TreasureHunt.Properties {
         internal static byte[] GoldPile {
             get {
                 object obj = ResourceManager.GetObject("GoldPile", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] GoldPot {
+            get {
+                object obj = ResourceManager.GetObject("GoldPot", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] HeartGem {
+            get {
+                object obj = ResourceManager.GetObject("HeartGem", resourceCulture);
                 return ((byte[])(obj));
             }
         }

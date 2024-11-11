@@ -6,6 +6,11 @@
         RedGem,
         GoldPile,
         GoldChalice,
+        BlueGem,
+        CrystalPot,
+        GoldPot,
+        GoldBox,
+        HeartGem
     }
 
     public static class TreasureImageLoader
@@ -17,6 +22,11 @@
             treasureImages[TreasureImage.RedGem] = ByteArrayToImage(Properties.Resources.RedGem);
             treasureImages[TreasureImage.GoldPile] = ByteArrayToImage(Properties.Resources.GoldPile);
             treasureImages[TreasureImage.GoldChalice] = ByteArrayToImage(Properties.Resources.GoldChalice);
+            treasureImages[TreasureImage.BlueGem] = ByteArrayToImage(Properties.Resources.BlueGem);
+            treasureImages[TreasureImage.CrystalPot] = ByteArrayToImage(Properties.Resources.CrystalPot);
+            treasureImages[TreasureImage.GoldPot] = ByteArrayToImage(Properties.Resources.GoldPot);
+            treasureImages[TreasureImage.GoldBox] = ByteArrayToImage(Properties.Resources.GoldBox);
+            treasureImages[TreasureImage.HeartGem] = ByteArrayToImage(Properties.Resources.HeartGem);
         }
 
         private static Image ByteArrayToImage(byte[] byteArray)

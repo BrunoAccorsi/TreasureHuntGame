@@ -139,4 +139,19 @@
   <data name="CursedPotion" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\CursedPotion.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="GoldBox" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\GoldBox.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="HeartGem" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\HeartGem.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="CrystalPot" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CrystalPot.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="GoldPot" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\GoldPot.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="BlueGem" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\BlueGem.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

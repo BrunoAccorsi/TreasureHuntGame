@@ -72,7 +72,7 @@ namespace TreasureHunt
 
             sourcePanel.Controls.Add(new Label()
             {
-                Font = new Font("Tahoma", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0),
+                Font = new Font("Tahoma", 12F, FontStyle.Regular, GraphicsUnit.Point, 0),
                 Location = new Point(10, yOffset),
                 Size = new Size(178, 40),
                 Text = "Treasures",
@@ -102,7 +102,7 @@ namespace TreasureHunt
 
             sourcePanel.Controls.Add(new Label()
             {
-                Font = new Font("Tahoma", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0),
+                Font = new Font("Tahoma", 12F, FontStyle.Regular, GraphicsUnit.Point, 0),
                 Location = new Point(10, yOffset),
                 Size = new Size(178, 40),
                 Text = "Traps",
@@ -154,6 +154,10 @@ namespace TreasureHunt
                 {
                     TrapImage trapImage = (TrapImage)sourcePicBox.Tag;
                     sourcePicBox.Image = TrapImageLoader.GetImage(trapImage);
+                }
+                else
+                {
+                    sourcePicBox.BackColor = Color.BurlyWood;
                 }
             }
         }
@@ -225,6 +229,7 @@ namespace TreasureHunt
                 // Hide the source panel
                 sourcePanel.Visible = false;
                 endTurnButton.Text = "End Game";
+                turnLabel.Text = "Player 2 (Finder) turn";
 
                 handleSearchState();
             }
