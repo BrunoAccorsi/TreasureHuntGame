@@ -11,11 +11,13 @@ namespace TreasureHunt
 
 
         private int SearchMoves = 5;
+        private int TotalPoints = 0;
 
         TableLayoutPanel tableLayoutPanel = new TableLayoutPanel();
         private const int GridSize = 6; // 6x6 grid
         private const int ImageSizeW = 132; // Width of each cell
         private const int ImageSizeH = 122; // Height of each cell 
+
         public Form1()
         {
             InitializeComponent();
@@ -25,6 +27,7 @@ namespace TreasureHunt
         {
             InitializeGrid();
             InitializeSourcePanel();
+            UpdateScoreDisplay();
         }
 
         private void InitializeGrid()
@@ -164,6 +167,8 @@ namespace TreasureHunt
                     if (sourceGridCell.Tag is TreasureTyles treasureType)
                     {
                         sourceGridCell.Image = treasuresByImage[treasureType].Image;
+                        TotalPoints += treasuresByImage[treasureType].Points; 
+                        UpdateScoreDisplay();
                     }
                 }
                 else if (sourceGridCell.CellType == CellTypes.Trap)
@@ -185,6 +190,27 @@ namespace TreasureHunt
                     //end Game
                     MessageBox.Show("Game Over");
                 }
+            }
+        }
+
+        private void UpdateScoreDisplay()
+        {
+            var scoreLabel = gameStatePanel.Controls.Find("scoreLabel", true).FirstOrDefault() as Label;
+            if (scoreLabel != null)
+            {
+                scoreLabel.Text = $"Total Points: {TotalPoints}";
+            }
+            else
+            {
+                scoreLabel = new Label
+                {
+                    Text = $"Total Points: {TotalPoints}",
+                    Location = new Point(80, 40),
+                    Size = new Size(200, 30),
+                    ForeColor = Color.Green,
+                    Name = "scoreLabel"
+                };
+                gameStatePanel.Controls.Add(scoreLabel);
             }
         }
 
@@ -257,6 +283,13 @@ namespace TreasureHunt
 
         private void endTurnButton_Click(object sender, EventArgs e)
         {
+            var remainingAssets = sourcePanel.Controls.OfType<GridCell>().Any();
+            if (currentState == GameState.Hiding && remainingAssets)
+            {
+                MessageBox.Show("You need to place all treasures and traps before ending your turn!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             GameState nextStage = currentState == GameState.Hiding ? GameState.Searching : GameState.Hiding;
             currentState = nextStage;
 
