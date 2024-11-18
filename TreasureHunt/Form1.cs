@@ -9,7 +9,6 @@ namespace TreasureHunt
         Dictionary<TreasureTyles, Treasure> treasuresByImage = new Dictionary<TreasureTyles, Treasure>(); //dictionary so we can retrieve the treasures by its row and col
         Dictionary<TrapTypes, Trap> trapsByImage = new Dictionary<TrapTypes, Trap>(); //dictionary so we can retrieve the trap by its row and col
 
-
         private int SearchMoves = 5;
         private int TotalPoints = 0;
 
@@ -21,6 +20,7 @@ namespace TreasureHunt
         public Form1()
         {
             InitializeComponent();
+            RestartButton();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -167,7 +167,7 @@ namespace TreasureHunt
                     if (sourceGridCell.Tag is TreasureTyles treasureType)
                     {
                         sourceGridCell.Image = treasuresByImage[treasureType].Image;
-                        TotalPoints += treasuresByImage[treasureType].Points; 
+                        TotalPoints += treasuresByImage[treasureType].Points;
                         UpdateScoreDisplay();
                     }
                 }
@@ -323,6 +323,45 @@ namespace TreasureHunt
                     cellPosition[(row, col)].SetDefaultImage();
                 }
             }
+        }
+
+        private void RestartButton()
+        {
+            Button restartButton = new Button
+            {
+                Text = "Restart Game",
+                Location = new Point(10, 80),
+                Size = new Size(100, 30),
+                Name = "RestartButton"
+            };
+            restartButton.Click += RestartButton_Click;
+            gameStatePanel.Controls.Add(restartButton);
+        }
+
+        private void RestartButton_Click(object sender, EventArgs e)
+        {
+            var result = MessageBox.Show("Are you sure you want to restart the game?", "Confirm Restart", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (result == DialogResult.Yes)
+            {
+                ResetGame();
+            }
+        }
+
+        private void ResetGame()
+        {
+            currentState = GameState.Hiding;
+            SearchMoves = 5;
+            TotalPoints = 0;
+            sourcePanel.Visible = true;
+            endTurnButton.Text = "End Turn";
+            turnLabel.Text = "Player 1 (Hider) turn";
+
+            gameStatePanel.Controls.RemoveByKey("playerMoves");
+            gameStatePanel.Controls.RemoveByKey("scoreLabel");
+
+            InitializeGrid();
+            InitializeSourcePanel();
+            UpdateScoreDisplay();
         }
     }
 
