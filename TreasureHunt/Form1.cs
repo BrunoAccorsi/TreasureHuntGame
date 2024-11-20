@@ -19,8 +19,7 @@ namespace TreasureHunt
 
         public Form1()
         {
-            InitializeComponent();
-            RestartButton();
+            InitializeComponent();            
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -323,31 +322,18 @@ namespace TreasureHunt
                     cellPosition[(row, col)].SetDefaultImage();
                 }
             }
-        }
-
-        private void RestartButton()
-        {
-            Button restartButton = new Button
-            {
-                Text = "Restart Game",
-                Location = new Point(10, 80),
-                Size = new Size(100, 30),
-                Name = "RestartButton"
-            };
-            restartButton.Click += RestartButton_Click;
-            gameStatePanel.Controls.Add(restartButton);
-        }
+        }       
 
         private void RestartButton_Click(object sender, EventArgs e)
         {
             var result = MessageBox.Show("Are you sure you want to restart the game?", "Confirm Restart", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (result == DialogResult.Yes)
             {
-                ResetGame();
+                RestartGame();
             }
         }
 
-        private void ResetGame()
+        private void RestartGame()
         {
             currentState = GameState.Hiding;
             SearchMoves = 5;
