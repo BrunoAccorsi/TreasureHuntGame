@@ -45,10 +45,9 @@
             // 
             gridPanel.AllowDrop = true;
             gridPanel.BackColor = Color.Wheat;
-            gridPanel.Location = new Point(364, 437);
-            gridPanel.Margin = new Padding(4, 5, 4, 5);
+            gridPanel.Location = new Point(255, 262);
             gridPanel.Name = "gridPanel";
-            gridPanel.Size = new Size(1114, 1213);
+            gridPanel.Size = new Size(780, 728);
             gridPanel.TabIndex = 0;
             // 
             // sourcePanel
@@ -57,19 +56,17 @@
             sourcePanel.AutoScroll = true;
             sourcePanel.BackColor = Color.Wheat;
             sourcePanel.Controls.Add(label1);
-            sourcePanel.Location = new Point(17, 437);
-            sourcePanel.Margin = new Padding(4, 5, 4, 5);
+            sourcePanel.Location = new Point(12, 262);
             sourcePanel.Name = "sourcePanel";
-            sourcePanel.Size = new Size(286, 1213);
+            sourcePanel.Size = new Size(200, 728);
             sourcePanel.TabIndex = 1;
             // 
             // label1
             // 
             label1.Font = new Font("Tahoma", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label1.Location = new Point(14, 15);
-            label1.Margin = new Padding(4, 0, 4, 0);
+            label1.Location = new Point(10, 9);
             label1.Name = "label1";
-            label1.Size = new Size(254, 127);
+            label1.Size = new Size(178, 76);
             label1.TabIndex = 0;
             label1.Text = "Choose the Treasures and traps to place";
             label1.TextAlign = ContentAlignment.TopCenter;
@@ -85,9 +82,8 @@
             panel1.Controls.Add(gridPanel);
             panel1.Dock = DockStyle.Fill;
             panel1.Location = new Point(0, 0);
-            panel1.Margin = new Padding(4, 5, 4, 5);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1817, 1848);
+            panel1.Size = new Size(1272, 780);
             panel1.TabIndex = 0;
             // 
             // gameStatePanel
@@ -96,19 +92,17 @@
             gameStatePanel.Controls.Add(restartButton);
             gameStatePanel.Controls.Add(endTurnButton);
             gameStatePanel.Controls.Add(turnLabel);
-            gameStatePanel.Location = new Point(17, 220);
-            gameStatePanel.Margin = new Padding(4, 5, 4, 5);
+            gameStatePanel.Location = new Point(12, 117);
             gameStatePanel.Name = "gameStatePanel";
-            gameStatePanel.Size = new Size(286, 167);
+            gameStatePanel.Size = new Size(200, 139);
             gameStatePanel.TabIndex = 0;
             // 
             // restartButton
             // 
             restartButton.BackColor = Color.Tan;
-            restartButton.Location = new Point(16, 119);
-            restartButton.Margin = new Padding(4, 5, 4, 5);
+            restartButton.Location = new Point(11, 71);
             restartButton.Name = "restartButton";
-            restartButton.Size = new Size(254, 38);
+            restartButton.Size = new Size(178, 23);
             restartButton.TabIndex = 3;
             restartButton.Text = "Restart Game";
             restartButton.UseVisualStyleBackColor = false;
@@ -117,10 +111,9 @@
             // endTurnButton
             // 
             endTurnButton.BackColor = Color.Tan;
-            endTurnButton.Location = new Point(14, 75);
-            endTurnButton.Margin = new Padding(4, 5, 4, 5);
+            endTurnButton.Location = new Point(10, 45);
             endTurnButton.Name = "endTurnButton";
-            endTurnButton.Size = new Size(254, 38);
+            endTurnButton.Size = new Size(178, 23);
             endTurnButton.TabIndex = 2;
             endTurnButton.Text = "End Turn";
             endTurnButton.UseVisualStyleBackColor = false;
@@ -129,25 +122,23 @@
             // turnLabel
             // 
             turnLabel.Font = new Font("Tahoma", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            turnLabel.Location = new Point(14, 18);
-            turnLabel.Margin = new Padding(4, 0, 4, 0);
+            turnLabel.Location = new Point(10, 11);
             turnLabel.Name = "turnLabel";
-            turnLabel.Size = new Size(254, 48);
+            turnLabel.Size = new Size(178, 29);
             turnLabel.TabIndex = 1;
             turnLabel.Text = " Player 1 (Hider) turn";
             turnLabel.TextAlign = ContentAlignment.TopCenter;
             // 
             // Form1
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             AutoScroll = true;
             BackColor = Color.Black;
             BackgroundImageLayout = ImageLayout.Center;
-            ClientSize = new Size(1817, 1848);
+            ClientSize = new Size(1272, 780);
             Controls.Add(panel1);
             DoubleBuffered = true;
-            Margin = new Padding(4, 5, 4, 5);
             Name = "Form1";
             Text = "Form1";
             Load += Form1_Load;
