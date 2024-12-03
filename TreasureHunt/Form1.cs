@@ -197,10 +197,10 @@ namespace TreasureHunt
                     }
                 }
                 else
-                {   
+                {
                     //When cell is clicked it change the color cell and keep it by the game over
                     sourceGridCell.BackColor = Color.LightGray;
-                    sourceGridCell.IsClicked = true; 
+                    sourceGridCell.IsClicked = true;
                 }
 
                 sourceGridCell.Tag = "Clicked";
@@ -268,9 +268,9 @@ namespace TreasureHunt
 
         private void GridCell_MouseLeave(GridCell gridCell, EventArgs e)
         {
-            if (!gridcell.IsClicked)
+            if (!gridCell.IsClicked)
             {
-                gridcell.BackColor = Color.Wheat;
+                gridCell.BackColor = Color.Wheat;
             }
         }
 
