@@ -4,7 +4,8 @@
     {
         Treasure,
         Trap,
-        Blank
+        Blank,
+        None
     }
     public class GridCell : PictureBox
     {

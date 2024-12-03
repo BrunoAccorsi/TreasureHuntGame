@@ -33,6 +33,7 @@
             label1 = new Label();
             panel1 = new Panel();
             gameStatePanel = new Panel();
+            restartButton = new Button();
             endTurnButton = new Button();
             turnLabel = new Label();
             sourcePanel.SuspendLayout();
@@ -82,23 +83,35 @@
             panel1.Dock = DockStyle.Fill;
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1272, 1109);
+            panel1.Size = new Size(1272, 780);
             panel1.TabIndex = 0;
             // 
             // gameStatePanel
             // 
             gameStatePanel.BackColor = Color.Wheat;
+            gameStatePanel.Controls.Add(restartButton);
             gameStatePanel.Controls.Add(endTurnButton);
             gameStatePanel.Controls.Add(turnLabel);
-            gameStatePanel.Location = new Point(12, 132);
+            gameStatePanel.Location = new Point(12, 117);
             gameStatePanel.Name = "gameStatePanel";
-            gameStatePanel.Size = new Size(200, 100);
+            gameStatePanel.Size = new Size(200, 139);
             gameStatePanel.TabIndex = 0;
+            // 
+            // restartButton
+            // 
+            restartButton.BackColor = Color.Tan;
+            restartButton.Location = new Point(11, 71);
+            restartButton.Name = "restartButton";
+            restartButton.Size = new Size(178, 23);
+            restartButton.TabIndex = 3;
+            restartButton.Text = "Restart Game";
+            restartButton.UseVisualStyleBackColor = false;
+            restartButton.Click += RestartButton_Click;
             // 
             // endTurnButton
             // 
             endTurnButton.BackColor = Color.Tan;
-            endTurnButton.Location = new Point(10, 64);
+            endTurnButton.Location = new Point(10, 45);
             endTurnButton.Name = "endTurnButton";
             endTurnButton.Size = new Size(178, 23);
             endTurnButton.TabIndex = 2;
@@ -123,7 +136,7 @@
             AutoScroll = true;
             BackColor = Color.Black;
             BackgroundImageLayout = ImageLayout.Center;
-            ClientSize = new Size(1272, 1109);
+            ClientSize = new Size(1272, 780);
             Controls.Add(panel1);
             DoubleBuffered = true;
             Name = "Form1";
@@ -144,5 +157,6 @@
         private Panel gameStatePanel;
         private Button endTurnButton;
         private Label turnLabel;
+        private Button restartButton;
     }
 }

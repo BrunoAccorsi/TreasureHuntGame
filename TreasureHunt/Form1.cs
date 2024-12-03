@@ -9,9 +9,10 @@ namespace TreasureHunt
         Dictionary<TreasureTyles, Treasure> treasuresByImage = new Dictionary<TreasureTyles, Treasure>(); //dictionary so we can retrieve the treasures by its row and col
         Dictionary<TrapTypes, Trap> trapsByImage = new Dictionary<TrapTypes, Trap>(); //dictionary so we can retrieve the trap by its row and col
 
-
-        private int SearchMoves = 5;
+        private int SearchMoves = 20;
         private int TotalPoints = 0;
+        private int FoundTreasures = 0;
+        private const int TotalTreasures = 4;
 
         TableLayoutPanel tableLayoutPanel = new TableLayoutPanel();
         private const int GridSize = 6; // 6x6 grid
@@ -72,8 +73,8 @@ namespace TreasureHunt
             sourcePanel.DragEnter += (s, e) => SourcePanel_MouseDown(sourcePanel, e);
 
             Random random = new Random();
-            var treasureTypes = Enum.GetValues(typeof(TreasureTyles)).Cast<TreasureTyles>().OrderBy(x => random.Next()).Take(3);
-            var trapTypes = Enum.GetValues(typeof(TrapTypes)).Cast<TrapTypes>().OrderBy(x => random.Next()).Take(2);
+            var treasureTypes = Enum.GetValues(typeof(TreasureTyles)).Cast<TreasureTyles>().OrderBy(x => random.Next()).Take(4);
+            var trapTypes = Enum.GetValues(typeof(TrapTypes)).Cast<TrapTypes>().OrderBy(x => random.Next()).Take(3);
 
             int yOffset = 100;
 
@@ -159,23 +160,38 @@ namespace TreasureHunt
 
         private void GridCell_MouseClick(GridCell sourceGridCell, MouseEventArgs e)
         {
+            if (sourceGridCell.Tag != null && sourceGridCell.Tag.ToString() == "Clicked")
+            {
+                MessageBox.Show("This cell has already been clicked.");
+                return;
+            }
+
             if (currentState == GameState.Searching)
             {
                 UpdatePLayerMoves();
+
                 if (sourceGridCell.CellType == CellTypes.Treasure)
                 {
-                    if (sourceGridCell.Tag is TreasureTyles treasureType)
+                    if (treasuresByImage.TryGetValue((TreasureTyles)sourceGridCell.Tag, out var treasure))
                     {
-                        sourceGridCell.Image = treasuresByImage[treasureType].Image;
-                        TotalPoints += treasuresByImage[treasureType].Points; 
+                        sourceGridCell.Image = treasure.Image;
+                        TotalPoints += treasure.Points;
+                        FoundTreasures++;
                         UpdateScoreDisplay();
+
+                        if (FoundTreasures == TotalTreasures)
+                        {
+                            MessageBox.Show("Player 2 is the winner! All treasures found.");
+                            RestartGame();
+                            return;
+                        }
                     }
                 }
                 else if (sourceGridCell.CellType == CellTypes.Trap)
                 {
-                    if (sourceGridCell.Tag is TrapTypes trapType)
+                    if (sourceGridCell.Tag is TrapTypes trapType && trapsByImage.TryGetValue(trapType, out var trap))
                     {
-                        sourceGridCell.Image = trapsByImage[trapType].Image;
+                        sourceGridCell.Image = trap.Image;
                         MessageBox.Show("Trap! You lose 1 move");
                         UpdatePLayerMoves();
                     }
@@ -187,10 +203,15 @@ namespace TreasureHunt
                     sourceGridCell.IsClicked = true; 
                 }
 
+                sourceGridCell.Tag = "Clicked";
+
                 if (SearchMoves <= 0)
                 {
-                    //end Game
-                    MessageBox.Show("Game Over");
+                    string winner = FoundTreasures == TotalTreasures
+                        ? "Player 2"
+                        : "Player 1";
+                    MessageBox.Show($"Game Over! The winner is {winner}");
+                    RestartGame();
                 }
             }
         }
@@ -207,8 +228,8 @@ namespace TreasureHunt
                 scoreLabel = new Label
                 {
                     Text = $"Total Points: {TotalPoints}",
-                    Location = new Point(80, 40),
-                    Size = new Size(200, 30),
+                    Location = new Point(10, 100),
+                    Size = new Size(200, 20),
                     ForeColor = Color.Green,
                     Name = "scoreLabel"
                 };
@@ -218,7 +239,7 @@ namespace TreasureHunt
 
         private void UpdatePLayerMoves()
         {
-            if (currentState == GameState.Searching)
+            if (currentState == GameState.Searching && SearchMoves > 0)
             {
                 SearchMoves--;
                 gameStatePanel.Controls.Find("playerMoves", true).First().Text = $"{SearchMoves} moves left";
@@ -245,7 +266,7 @@ namespace TreasureHunt
             }
         }
 
-        private void GridCell_MouseLeave(GridCell gridcell, EventArgs e)
+        private void GridCell_MouseLeave(GridCell gridCell, EventArgs e)
         {
             if (!gridcell.IsClicked)
             {
@@ -311,8 +332,8 @@ namespace TreasureHunt
                 Label playerMoves = new Label
                 {
                     Text = $"{SearchMoves} moves left",
-                    Location = new Point(10, 40),
-                    Size = new Size(179, 29),
+                    Location = new Point(10, 120),
+                    Size = new Size(200, 20),
                     ForeColor = Color.Red,
                     Name = "playerMoves"
                 };
@@ -328,9 +349,58 @@ namespace TreasureHunt
             {
                 for (int col = 0; col < GridSize; col++)
                 {
-                    cellPosition[(row, col)].SetDefaultImage();
+                    var gridCell = cellPosition[(row, col)];
+
+                    if (gridCell.Tag != null && gridCell.Tag.ToString() == "Clicked")
+                    {
+                        if (gridCell.CellType == CellTypes.None)
+                        {
+                            gridCell.BackColor = Color.Gray;
+                        }
+                        continue;
+                    }
+
+                    gridCell.SetDefaultImage();
                 }
             }
+        }
+
+        private void RestartButton_Click(object sender, EventArgs e)
+        {
+            var result = MessageBox.Show("Are you sure you want to restart the game?", "Confirm Restart", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (result == DialogResult.Yes)
+            {
+                RestartGame();
+            }
+        }
+
+        private void RestartGame()
+        {
+            currentState = GameState.Hiding;
+            SearchMoves = 5;
+            TotalPoints = 0;
+            FoundTreasures = 0;
+            sourcePanel.Visible = true;
+            endTurnButton.Text = "End Turn";
+            turnLabel.Text = "Player 1 (Hider) turn";
+
+            gameStatePanel.Controls.RemoveByKey("playerMoves");
+            gameStatePanel.Controls.RemoveByKey("scoreLabel");
+
+            var playerMovesControl = gameStatePanel.Controls.Find("playerMoves", true).FirstOrDefault();
+            if (playerMovesControl != null)
+            {
+                playerMovesControl.Text = $"{SearchMoves} moves left";
+            }
+
+            InitializeGrid();
+            InitializeSourcePanel();
+            UpdateScoreDisplay();
+        }
+
+        private void gameStatePanel_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 
