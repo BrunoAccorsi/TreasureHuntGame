@@ -9,6 +9,7 @@
     public class GridCell : PictureBox
     {
         public CellTypes CellType { get; set; }
+        public bool IsClicked { get; set; } = false;
 
 
         public GridCell() { }

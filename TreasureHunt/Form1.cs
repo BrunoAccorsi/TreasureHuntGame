@@ -181,8 +181,10 @@ namespace TreasureHunt
                     }
                 }
                 else
-                {
-                    sourceGridCell.BackColor = Color.BurlyWood;
+                {   
+                    //When cell is clicked it change the color cell and keep it by the game over
+                    sourceGridCell.BackColor = Color.LightGray;
+                    sourceGridCell.IsClicked = true; 
                 }
 
                 if (SearchMoves <= 0)
@@ -237,12 +239,18 @@ namespace TreasureHunt
 
         private void GridCell_MouseEnter(GridCell gridCell, EventArgs e)
         {
-            gridCell.BackColor = Color.Moccasin;
+            if (!gridCell.IsClicked)
+            {
+                gridCell.BackColor = Color.Moccasin;
+            }
         }
 
         private void GridCell_MouseLeave(GridCell gridcell, EventArgs e)
         {
-            gridcell.BackColor = Color.Wheat;
+            if (!gridcell.IsClicked)
+            {
+                gridcell.BackColor = Color.Wheat;
+            }
         }
 
         private void GridCell_DragDrop(GridCell targetGridCell, DragEventArgs e)
