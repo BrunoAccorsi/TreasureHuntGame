@@ -36,9 +36,11 @@
             restartButton = new Button();
             endTurnButton = new Button();
             turnLabel = new Label();
+            pictureBox1 = new PictureBox();
             sourcePanel.SuspendLayout();
             panel1.SuspendLayout();
             gameStatePanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // gridPanel
@@ -74,12 +76,12 @@
             // panel1
             // 
             panel1.AutoScroll = true;
-            panel1.BackColor = Color.SteelBlue;
-            panel1.BackgroundImage = Properties.Resources.Background1;
+            panel1.BackColor = Color.Transparent;
             panel1.BackgroundImageLayout = ImageLayout.None;
             panel1.Controls.Add(sourcePanel);
             panel1.Controls.Add(gameStatePanel);
             panel1.Controls.Add(gridPanel);
+            panel1.Controls.Add(pictureBox1);
             panel1.Dock = DockStyle.Fill;
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
@@ -129,6 +131,19 @@
             turnLabel.Text = " Player 1 (Hider) turn";
             turnLabel.TextAlign = ContentAlignment.TopCenter;
             // 
+            // pictureBox1
+            // 
+            pictureBox1.BackColor = Color.SteelBlue;
+            pictureBox1.BackgroundImage = Properties.Resources.Background1;
+            pictureBox1.BackgroundImageLayout = ImageLayout.None;
+            pictureBox1.Dock = DockStyle.Fill;
+            pictureBox1.Location = new Point(0, 0);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(1255, 990);
+            pictureBox1.TabIndex = 2;
+            pictureBox1.TabStop = false;
+            pictureBox1.Click += pictureBox1_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -145,6 +160,7 @@
             sourcePanel.ResumeLayout(false);
             panel1.ResumeLayout(false);
             gameStatePanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
         }
 
@@ -158,5 +174,6 @@
         private Button endTurnButton;
         private Label turnLabel;
         private Button restartButton;
+        private PictureBox pictureBox1;
     }
 }
