@@ -1,23 +1,30 @@
+using System.Windows.Forms;
+
 namespace TreasureHunt
 {
     public partial class Form1 : Form
     {
+
         private enum GameState { Hiding, Searching }
-        private GameState currentState = GameState.Hiding;
+        GameControl gameControl = new GameControl("Player A", "Player B");
 
         Dictionary<(int, int), GridCell> cellPosition = new Dictionary<(int, int), GridCell>(); //dictionary so we can retrieve the cell by its row and col
         Dictionary<TreasureTyles, Treasure> treasuresByImage = new Dictionary<TreasureTyles, Treasure>(); //dictionary so we can retrieve the treasures by its row and col
         Dictionary<TrapTypes, Trap> trapsByImage = new Dictionary<TrapTypes, Trap>(); //dictionary so we can retrieve the trap by its row and col
 
-        private int SearchMoves = 20;
+        private static int MAX_MOVES = 20;
+
+        private int SearchMoves = MAX_MOVES;
         private int TotalPoints = 0;
         private int FoundTreasures = 0;
         private const int TotalTreasures = 4;
 
         TableLayoutPanel tableLayoutPanel = new TableLayoutPanel();
         private const int GridSize = 6; // 6x6 grid
-        private const int ImageSizeW = 132; // Width of each cell
-        private const int ImageSizeH = 122; // Height of each cell 
+        private const int ImageSizeW = 130; // Width of each cell
+        private const int ImageSizeH = 120; // Height of each cell 
+
+
 
         public Form1()
         {
@@ -26,6 +33,7 @@ namespace TreasureHunt
 
         private void Form1_Load(object sender, EventArgs e)
         {
+
             InitializeGrid();
             InitializeSourcePanel();
             UpdateScoreDisplay();
@@ -35,6 +43,11 @@ namespace TreasureHunt
         {
             gridPanel.Controls.Clear();
             gridPanel.AllowDrop = true;
+
+            int gridWidth = GridSize * ImageSizeW;
+            int gridHeigh = GridSize * ImageSizeH;
+            gridPanel.MaximumSize = new Size(gridWidth, gridHeigh);
+            gridPanel.Size = new Size(gridWidth, gridHeigh);
 
             for (int row = 0; row < GridSize; row++)
             {
@@ -57,7 +70,7 @@ namespace TreasureHunt
 
         private void GridCell_MouseDown(GridCell gridCell, MouseEventArgs e)
         {
-            if (currentState == GameState.Hiding)
+            if (gameControl.CurrentState == (int)GameState.Hiding)
                 gridCell.DoDragDrop(gridCell, DragDropEffects.Move);
         }
 
@@ -76,7 +89,7 @@ namespace TreasureHunt
             var treasureTypes = Enum.GetValues(typeof(TreasureTyles)).Cast<TreasureTyles>().OrderBy(x => random.Next()).Take(4);
             var trapTypes = Enum.GetValues(typeof(TrapTypes)).Cast<TrapTypes>().OrderBy(x => random.Next()).Take(3);
 
-            int yOffset = 100;
+            int yOffset = 110;
 
             sourcePanel.Controls.Add(new Label()
             {
@@ -146,6 +159,18 @@ namespace TreasureHunt
                 sourcePanel.Controls.Add(sourceGridCell);
                 yOffset += ImageSizeH + 20;
             }
+
+            turnLabel.Text = $"{gameControl.currentPlayer()} turn";
+            gameStateLabel.Text = gameControl.currentGameState();
+
+            Dictionary<int, int> score = gameControl.getUpdatedScore();
+
+            playerOneLabel.Parent = pictureBox1;
+            playerTwoLabel.Parent = pictureBox1;
+
+            playerOneLabel.Text = $"{gameControl.getPlayerName(1)} : {score[1]}";
+            playerTwoLabel.Text = $"{gameControl.getPlayerName(2)} : {score[2]}";
+
         }
 
         private void SourceGridCell_MouseDown(GridCell sourceGridCell, MouseEventArgs e)
@@ -166,7 +191,7 @@ namespace TreasureHunt
                 return;
             }
 
-            if (currentState == GameState.Searching)
+            if (gameControl.CurrentState == (int)GameState.Searching)
             {
                 UpdatePLayerMoves();
 
@@ -181,7 +206,8 @@ namespace TreasureHunt
 
                         if (FoundTreasures == TotalTreasures)
                         {
-                            MessageBox.Show("Player 2 is the winner! All treasures found.");
+                            MessageBox.Show($"Player {gameControl.currentPlayer()} is the winner! All treasures found.");
+                            gameControl.hasWinner(gameControl.currentPlayer());
                             RestartGame();
                             return;
                         }
@@ -208,8 +234,10 @@ namespace TreasureHunt
                 if (SearchMoves <= 0)
                 {
                     string winner = FoundTreasures == TotalTreasures
-                        ? "Player 2"
-                        : "Player 1";
+                        ? gameControl.currentPlayer()
+                        : gameControl.iddlePlayer();
+
+                    gameControl.hasWinner(winner);
                     MessageBox.Show($"Game Over! The winner is {winner}");
                     RestartGame();
                 }
@@ -239,7 +267,7 @@ namespace TreasureHunt
 
         private void UpdatePLayerMoves()
         {
-            if (currentState == GameState.Searching && SearchMoves > 0)
+            if (gameControl.CurrentState == (int)GameState.Searching && SearchMoves > 0)
             {
                 SearchMoves--;
                 gameStatePanel.Controls.Find("playerMoves", true).First().Text = $"{SearchMoves} moves left";
@@ -313,26 +341,28 @@ namespace TreasureHunt
         private void endTurnButton_Click(object sender, EventArgs e)
         {
             var remainingAssets = sourcePanel.Controls.OfType<GridCell>().Any();
-            if (currentState == GameState.Hiding && remainingAssets)
+            if (gameControl.CurrentState == (int)GameState.Hiding && remainingAssets)
             {
                 MessageBox.Show("You need to place all treasures and traps before ending your turn!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            GameState nextStage = currentState == GameState.Hiding ? GameState.Searching : GameState.Hiding;
-            currentState = nextStage;
+            gameControl.endTurn();
+            turnLabel.Text = $"{gameControl.currentPlayer()} turn";
+            gameStateLabel.Text = gameControl.currentGameState();
 
-            if (nextStage == GameState.Searching)
+
+            if (gameControl.CurrentState == (int)GameState.Searching)
             {
                 // Hide the source panel
                 sourcePanel.Visible = false;
                 endTurnButton.Text = "End Game";
-                turnLabel.Text = "Player 2 (Finder) turn";
+                turnLabel.Text = gameControl.currentPlayer(); // "Player 2 (Finder) turn";
 
                 Label playerMoves = new Label
                 {
                     Text = $"{SearchMoves} moves left",
-                    Location = new Point(10, 120),
+                    Location = new Point(10, 122),
                     Size = new Size(200, 20),
                     ForeColor = Color.Red,
                     Name = "playerMoves"
@@ -368,6 +398,12 @@ namespace TreasureHunt
         private void RestartButton_Click(object sender, EventArgs e)
         {
             var result = MessageBox.Show("Are you sure you want to restart the game?", "Confirm Restart", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+            if (gameControl.CurrentState == (int)GameState.Searching)
+            {
+                gameControl.hasWinner(gameControl.iddlePlayer(), true);
+            }
+
             if (result == DialogResult.Yes)
             {
                 RestartGame();
@@ -376,13 +412,13 @@ namespace TreasureHunt
 
         private void RestartGame()
         {
-            currentState = GameState.Hiding;
-            SearchMoves = 5;
+            //currentState = GameState.Hiding;
+            SearchMoves = MAX_MOVES;
             TotalPoints = 0;
             FoundTreasures = 0;
             sourcePanel.Visible = true;
             endTurnButton.Text = "End Turn";
-            turnLabel.Text = "Player 1 (Hider) turn";
+            //turnLabel.Text = $"{gameControl.currentPlayer()} turn";
 
             gameStatePanel.Controls.RemoveByKey("playerMoves");
             gameStatePanel.Controls.RemoveByKey("scoreLabel");
@@ -398,15 +434,6 @@ namespace TreasureHunt
             UpdateScoreDisplay();
         }
 
-        private void gameStatePanel_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 
 }
