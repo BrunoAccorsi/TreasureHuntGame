@@ -302,6 +302,10 @@ namespace TreasureHunt
             GridCell sourceGridCell = e.Data.GetData(typeof(GridCell)) as GridCell;
             if (sourceGridCell != null && targetGridCell != sourceGridCell)
             {
+                if (targetGridCell.Tag != null)
+                {
+                    return;
+                }
                 if (sourceGridCell.Parent == sourcePanel)
                 {
                     // Move image from source to target
@@ -311,7 +315,7 @@ namespace TreasureHunt
 
                     // Remove source grid cell from sourcePanel
                     sourcePanel.Controls.Remove(sourceGridCell);
-                    sourceGridCell.Dispose(); // Optionally dispose of the control
+                    sourceGridCell.Dispose();
                 }
                 else
                 {
