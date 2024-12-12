@@ -42,6 +42,7 @@
             endTurnButton = new Button();
             turnLabel = new Label();
             pictureBox1 = new PictureBox();
+            btn_startOver = new Button();
             panel1.SuspendLayout();
             ScorePanel.SuspendLayout();
             gameStatePanel.SuspendLayout();
@@ -86,13 +87,14 @@
             // ScorePanel
             // 
             ScorePanel.BackColor = Color.Wheat;
+            ScorePanel.Controls.Add(btn_startOver);
             ScorePanel.Controls.Add(label2);
             ScorePanel.Controls.Add(playerTwoLabel);
             ScorePanel.Controls.Add(playerOneLabel);
             ScorePanel.Controls.Add(label3);
             ScorePanel.Location = new Point(1029, 12);
             ScorePanel.Name = "ScorePanel";
-            ScorePanel.Size = new Size(200, 120);
+            ScorePanel.Size = new Size(200, 138);
             ScorePanel.TabIndex = 5;
             // 
             // label2
@@ -205,6 +207,17 @@
             pictureBox1.TabIndex = 2;
             pictureBox1.TabStop = false;
             // 
+            // btn_startOver
+            // 
+            btn_startOver.BackColor = Color.Tan;
+            btn_startOver.Location = new Point(10, 106);
+            btn_startOver.Name = "btn_startOver";
+            btn_startOver.Size = new Size(178, 23);
+            btn_startOver.TabIndex = 5;
+            btn_startOver.Text = "Start over";
+            btn_startOver.UseVisualStyleBackColor = false;
+            btn_startOver.Click += btn_startOver_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -243,5 +256,6 @@
         private Panel ScorePanel;
         private Label label2;
         private Label label3;
+        private Button btn_startOver;
     }
 }

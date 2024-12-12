@@ -1,9 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Windows.Forms;
-
-namespace TreasureHunt
-{    
+﻿namespace TreasureHunt
+{
     public class GameControl
     {
 
@@ -11,7 +7,7 @@ namespace TreasureHunt
         private string player2;
 
         private int turn;
-        private Dictionary<int, string> playerTurn  = new Dictionary<int, string>();
+        private Dictionary<int, string> playerTurn = new Dictionary<int, string>();
 
         private Dictionary<int, int> score = new Dictionary<int, int>()
         {
@@ -38,7 +34,7 @@ namespace TreasureHunt
             this.playerTurn.Add(2, playerTwoName);
 
             this.turn = 1;
-            this.currentState = (int) GameState.Hiding;
+            this.currentState = (int)GameState.Hiding;
         }
 
         public int CurrentState
@@ -58,7 +54,7 @@ namespace TreasureHunt
 
         public string iddlePlayer()
         {
-            if(turn == 1)
+            if (turn == 1)
             {
                 return $"{this.playerTurn[2]}";
             }
@@ -69,17 +65,17 @@ namespace TreasureHunt
         public string getPlayerName(int playerNumber)
         {
             string playerName;
-            
+
             this.playerTurn.TryGetValue(playerNumber, out playerName);
 
-            if(playerName == null)
+            if (playerName == null)
             {
                 return "ERROR";
             }
 
             return playerName;
         }
-        
+
 
         public void endTurn()
         {
@@ -95,10 +91,11 @@ namespace TreasureHunt
 
         private void changeGameState()
         {
-            if (this.currentState == (int) GameState.Hiding)
+            if (this.currentState == (int)GameState.Hiding)
             {
-                this.currentState = (int) GameState.Searching;
-            } else
+                this.currentState = (int)GameState.Searching;
+            }
+            else
             {
                 this.currentState = (int)GameState.Hiding;
             }
@@ -108,7 +105,7 @@ namespace TreasureHunt
         {
             var player = playerTurn.Where(pair => pair.Value == playerName).Select(pair => pair.Key);
 
-            if(player == null)
+            if (player == null)
             {
                 throw new Exception($"{playerName} not found!");
             }
@@ -119,7 +116,7 @@ namespace TreasureHunt
             {
                 changeGameScore();
             }
-            
+
             this.turn = player.First() - 1;
             endTurn();
         }
@@ -134,6 +131,15 @@ namespace TreasureHunt
         public Dictionary<int, int> getUpdatedScore()
         {
             return this.score;
+        }
+
+        public void resetGame()
+        {
+            this.score[1] = 0;
+            this.score[2] = 0;
+            this.turn = 1;
+            this.currentState = (int)GameState.Hiding;
+            this.winner = 0;
         }
     }
 }

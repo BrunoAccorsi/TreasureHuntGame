@@ -437,6 +437,12 @@ namespace TreasureHunt
             InitializeSourcePanel();
             UpdateScoreDisplay();
         }
+
+        private void btn_startOver_Click(object sender, EventArgs e)
+        {
+            gameControl.resetGame();
+            RestartGame();
+        }
     }
 
 }
