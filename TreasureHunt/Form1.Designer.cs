@@ -156,7 +156,7 @@
             gameStateLabel.AutoSize = true;
             gameStateLabel.BackColor = Color.Transparent;
             gameStateLabel.ForeColor = Color.Red;
-            gameStateLabel.Location = new Point(52, 0);
+            gameStateLabel.Location = new Point(52, 5);
             gameStateLabel.Name = "gameStateLabel";
             gameStateLabel.Size = new Size(0, 15);
             gameStateLabel.TabIndex = 4;
@@ -187,7 +187,7 @@
             // turnLabel
             // 
             turnLabel.Font = new Font("Tahoma", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            turnLabel.Location = new Point(10, 11);
+            turnLabel.Location = new Point(10, 20);
             turnLabel.Name = "turnLabel";
             turnLabel.Size = new Size(178, 29);
             turnLabel.TabIndex = 1;
