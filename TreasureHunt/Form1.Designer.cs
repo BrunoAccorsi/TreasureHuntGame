@@ -30,7 +30,6 @@
         {
             gridPanel = new Panel();
             sourcePanel = new Panel();
-            label1 = new Label();
             panel1 = new Panel();
             ScorePanel = new Panel();
             label2 = new Label();
@@ -43,7 +42,6 @@
             endTurnButton = new Button();
             turnLabel = new Label();
             pictureBox1 = new PictureBox();
-            sourcePanel.SuspendLayout();
             panel1.SuspendLayout();
             ScorePanel.SuspendLayout();
             gameStatePanel.SuspendLayout();
@@ -64,22 +62,10 @@
             sourcePanel.AllowDrop = true;
             sourcePanel.AutoScroll = true;
             sourcePanel.BackColor = Color.Wheat;
-            sourcePanel.Controls.Add(label1);
             sourcePanel.Location = new Point(12, 262);
             sourcePanel.Name = "sourcePanel";
             sourcePanel.Size = new Size(200, 728);
             sourcePanel.TabIndex = 1;
-            // 
-            // label1
-            // 
-            label1.BackColor = Color.Transparent;
-            label1.Font = new Font("Tahoma", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label1.Location = new Point(10, 9);
-            label1.Name = "label1";
-            label1.Size = new Size(178, 76);
-            label1.TabIndex = 0;
-            label1.Text = "Choose the Treasures and traps to place";
-            label1.TextAlign = ContentAlignment.TopCenter;
             // 
             // panel1
             // 
@@ -232,7 +218,6 @@
             Name = "Form1";
             Text = "Form1";
             Load += Form1_Load;
-            sourcePanel.ResumeLayout(false);
             panel1.ResumeLayout(false);
             ScorePanel.ResumeLayout(false);
             ScorePanel.PerformLayout();
@@ -246,7 +231,6 @@
 
         private Panel gridPanel;
         private Panel sourcePanel;
-        private Label label1;
         private Panel panel1;
         private Panel gameStatePanel;
         private Button endTurnButton;
