@@ -74,12 +74,18 @@ namespace TreasureHunt
 
         private void InitializeSourcePanel()
         {
-            //remove only the assets
-            foreach (var control in sourcePanel.Controls.OfType<GridCell>().ToArray())
+            sourcePanel.Controls.Clear();
+
+            var sourcePanelTitle = new Label()
             {
-                sourcePanel.Controls.Remove(control);
-                control.Dispose();
-            }
+                Font = new Font("Tahoma", 14F, FontStyle.Bold, GraphicsUnit.Point, 0),
+                Location = new Point(10, 10),
+                Size = new Size(sourcePanel.Width - 20, 100),
+                Text = "Choose the Treasures and traps to place",
+                TextAlign = ContentAlignment.TopCenter,
+                Name = "StaticLabel"
+            };
+            sourcePanel.Controls.Add(sourcePanelTitle);
 
             sourcePanel.DragEnter += (s, e) => SourcePanel_MouseDown(sourcePanel, e);
 
@@ -95,7 +101,8 @@ namespace TreasureHunt
                 Location = new Point(10, yOffset),
                 Size = new Size(178, 40),
                 Text = "Treasures",
-                TextAlign = ContentAlignment.TopCenter
+                TextAlign = ContentAlignment.TopCenter,
+                Name = "TreasuresLabel"
             });
             yOffset += 40;
 
@@ -105,7 +112,7 @@ namespace TreasureHunt
                 {
                     Points = 10
                 };
-                // Create a grid cell for each treasure
+
                 GridCell sourceCell = new GridCell
                 {
                     Size = new Size(ImageSizeW, ImageSizeH),
@@ -113,7 +120,7 @@ namespace TreasureHunt
                     Image = treasuresByImage[treasureType].Image,
                     SizeMode = PictureBoxSizeMode.Zoom,
                     BorderStyle = BorderStyle.FixedSingle,
-                    Tag = treasureType, // Store the treasure type in the Tag property for identification
+                    Tag = treasureType,
                     BackColor = Color.Gold,
                     CellType = CellTypes.Treasure
                 };
@@ -121,7 +128,6 @@ namespace TreasureHunt
 
                 sourcePanel.Controls.Add(sourceCell);
                 yOffset += ImageSizeH + 20;
-
             }
 
             sourcePanel.Controls.Add(new Label()
@@ -130,7 +136,8 @@ namespace TreasureHunt
                 Location = new Point(10, yOffset),
                 Size = new Size(178, 40),
                 Text = "Traps",
-                TextAlign = ContentAlignment.TopCenter
+                TextAlign = ContentAlignment.TopCenter,
+                Name = "TrapsLabel"
             });
             yOffset += 40;
 
@@ -138,7 +145,6 @@ namespace TreasureHunt
             {
                 trapsByImage[trapType] = new Trap(trapType);
 
-                // Create a grid cell for each treasure
                 GridCell sourceGridCell = new GridCell
                 {
                     Size = new Size(ImageSizeW, ImageSizeH),
@@ -146,7 +152,7 @@ namespace TreasureHunt
                     Image = trapsByImage[trapType].Image,
                     SizeMode = PictureBoxSizeMode.Zoom,
                     BorderStyle = BorderStyle.FixedSingle,
-                    Tag = trapType, // Store the treasure type in the Tag property for identification
+                    Tag = trapType,
                     AllowDrop = true,
                     BackColor = Color.DarkRed,
                     CellType = CellTypes.Trap
@@ -165,7 +171,6 @@ namespace TreasureHunt
 
             playerOneLabel.Text = $"{gameControl.getPlayerName(1)} : {score[1]}";
             playerTwoLabel.Text = $"{gameControl.getPlayerName(2)} : {score[2]}";
-
         }
 
         private void SourceGridCell_MouseDown(GridCell sourceGridCell, MouseEventArgs e)
