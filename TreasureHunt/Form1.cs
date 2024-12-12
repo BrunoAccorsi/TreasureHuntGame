@@ -1,5 +1,3 @@
-using System.Windows.Forms;
-
 namespace TreasureHunt
 {
     public partial class Form1 : Form
@@ -164,9 +162,6 @@ namespace TreasureHunt
             gameStateLabel.Text = gameControl.currentGameState();
 
             Dictionary<int, int> score = gameControl.getUpdatedScore();
-
-            playerOneLabel.Parent = pictureBox1;
-            playerTwoLabel.Parent = pictureBox1;
 
             playerOneLabel.Text = $"{gameControl.getPlayerName(1)} : {score[1]}";
             playerTwoLabel.Text = $"{gameControl.getPlayerName(2)} : {score[2]}";
@@ -433,7 +428,6 @@ namespace TreasureHunt
             InitializeSourcePanel();
             UpdateScoreDisplay();
         }
-
     }
 
 }
